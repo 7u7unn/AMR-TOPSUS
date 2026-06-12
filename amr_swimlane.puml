@@ -1,0 +1,107 @@
+@startuml AMR_Swimlane
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam defaultFontColor #2C2C2A
+skinparam ActivityBorderColor #5b9bd5
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderThickness 1
+skinparam ArrowColor #5F5E5A
+skinparam ArrowThickness 1.5
+skinparam shadowing false
+
+skinparam swimlane {
+    BorderColor #888780
+    BorderThickness 1.5
+    TitleFontSize 12
+    TitleFontStyle bold
+    TitleFontColor #2C2C2A
+    BackgroundColor #FAFAFA
+}
+
+title <b>AMR System Architecture — Swimlane View</b>\nROS 2 Humble | Mixed Indoor-Outdoor Navigation
+
+|#E1F5EE| <b>Web Interface</b> |
+start
+:Operator membuka\n**Dashboard**;
+note right
+  Antarmuka Web
+  (browser / mobile)
+end note
+
+fork
+  :Kirim **Goal / Teleop**\nke Navigation Stack;
+fork again
+  :Tampilkan **Status Robot**\n& data Odometri;
+end fork
+
+|#EEEDFE| <b>Sensor Fusion & Drivers</b> |
+:Driver **LiDAR SLLiDAR A2M7**\nmenerima scan 2D;
+:Driver **IMU N100**\nmembaca orientasi &\npercepatan;
+:Data **Odometri**\nmenerima feedback encoder;
+
+fork
+  -> Orientasi / Percepatan;
+  :Filter **EKF**\n(Robot Localization);
+fork again
+  -> Data encoder;
+  :Filter **EKF**\n(Robot Localization);
+end fork
+
+|#E6F1FB| <b>Navigation Stack (ROS 2 Humble)</b> |
+:**SLAM Toolbox & AMCL**\nmembangun peta & lokalisasi;
+note right
+  Output: Peta (Map) &
+  TF transform odom/map
+end note
+
+:Terima **Goal / Teleop**\ndari Web Interface;
+:Terima **Scan 2D & Obstacle**\ndari LiDAR;
+:Terima **Odometri Terfilter**\ndari EKF;
+
+:**Nav2 Stack**\n(Smac Planner · MPPI · Behavior Tree)\nmerencanakan & mengeksekusi path;
+note right
+  Input: peta + odom + goal
+  Output: cmd_vel
+end note
+
+:Kirim **cmd_vel**\n(perintah kecepatan)\nke Motor Control;
+:Kirim **Status Robot & Odom**\nke Web Interface;
+
+|#FAECE7| <b>Motor Control</b> |
+:**USB-to-RS485 Bus**\nmenerima cmd_vel;
+note right
+  Semua hardware terhubung via
+  USB-to-RS485:
+  IMU · LiDAR · Driver · Safety
+end note
+
+if (Safety Laser **CCF-LAS4-4M**\ndeteksi obstacle < 20 cm?) then (Ya — Darurat)
+  :**Hardware Interrupt**\n(Berhenti Darurat)\nlangsung ke RS485;
+  note right
+    Safety layer independen
+    dari Nav2 — interrupt
+    tidak melewati Nav2
+  end note
+  :Motor **BERHENTI**\nsegera;
+else (Tidak — Aman)
+  :RS485 teruskan\nperintah kontrol;
+  :**Motor Driver ZLAC8015D**\nmenerima perintah;
+  :**Motor BLDC ZLLG80ASM800**\n(Differential Drive)\nbergerak sesuai cmd_vel;
+  :Kirim **Feedback Encoder / Odom**\nke Sensor Fusion;
+endif
+
+|#FFF8E7| <b>Power Supply</b> |
+:**LiFePO4 Battery**\n(Nominal 48V · Maks 54V);
+
+fork
+  -> 48V DC;
+  :Suplai daya langsung\nke **Motor Control**;
+fork again
+  -> 12/19V DC\n(via DC-DC Converter);
+  :Suplai daya ke\n**Navigation Stack**\n(komputer / SBC);
+end fork
+
+stop
+
+@enduml

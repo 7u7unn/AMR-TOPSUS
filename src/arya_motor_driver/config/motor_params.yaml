@@ -1,0 +1,42 @@
+motor_driver:
+  ros__parameters:
+    port: "/dev/ttyS1"
+    baudrate: 38400
+
+    max_rpm: 300.0
+    enable_on_startup: true
+    publish_rate_hz: 50.0
+    control_rate_hz: 50.0
+    cmd_timeout_sec: 0.5
+    accel_rate_rpm_per_s: 800.0
+
+    # Kompensasi deadband motor:
+    # command kecil yang masih valid akan dinaikkan ke nilai minimum ini,
+    # sedangkan command nol/noise kecil tetap dibuat nol.
+    deadband_compensation_enabled: true
+    linear_min_cmd_mps: 0.2
+    angular_min_cmd_radps: 0.15
+    linear_zero_epsilon_mps: 0.02
+    angular_zero_epsilon_radps: 0.03
+
+    # Legacy invert flags (still supported).
+    invert_left: true
+    invert_right: false
+
+    # New split flags:
+    # - *_cmd  : sign correction for cmd_vel -> motor RPM
+    # - *_odom : sign correction for encoder delta -> odometry
+    invert_left_cmd: true
+    invert_right_cmd: false
+    invert_left_odom: true
+    invert_right_odom: false
+
+    # Geometri robot YMPI
+    wheel_radius: 0.1016
+    wheel_separation: 0.293
+    counts_per_rev: 16384
+
+    # Geometri robot AWG
+    # wheel_radius: 0.065
+    # wheel_separation: 0.3118
+    # counts_per_rev: 4096

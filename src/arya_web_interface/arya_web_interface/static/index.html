@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AMR Interface Control — YMPI 2.0</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=20260525-frontend" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+</head>
+
+<body>
+
+  <!-- ============================================================ HEADER -->
+  <header class="hmi-header">
+    <button class="hdr-menu" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+    <div class="hdr-brand">
+      <div class="brand-gem">AMR</div>
+      <div class="brand-text">
+        <strong>YMPI 2.0</strong>
+        <small>Industrial HMI Interface</small>
+      </div>
+    </div>
+    <div class="hdr-sep"></div>
+    <div class="hdr-sysinfo">
+      <span class="si-l">System</span>
+      <span class="si-v" id="sysStatus">ONLINE</span>
+    </div>
+    <div class="hdr-sep"></div>
+    <div class="hdr-sysinfo">
+      <span class="si-l">Time</span>
+      <span class="si-v" id="sysTime">--:--:--</span>
+    </div>
+    <div class="hdr-right">
+      <div id="statusBadge">CONNECTING...</div>
+      <button id="modeBtn" class="mode-btn">AUTO MODE</button>
+      <button class="hdr-icon-btn" id="openSettings" title="Settings" aria-label="Open settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- ============================================================ BODY -->
+  <div class="hmi-body">
+
+    <!-- SIDEBAR NAV -->
+    <nav class="hmi-sidebar" id="sidebar">
+      <div class="nav-section-lbl">Views</div>
+      <div class="nav-item active" data-view="drive" id="nav-drive">
+        <span class="nav-icon">⬡</span>
+        <span class="nav-lbl">Drive Control</span>
+      </div>
+      <div class="nav-item" data-view="io" id="nav-io">
+        <span class="nav-icon">◈</span>
+        <span class="nav-lbl">I/O Module</span>
+        <span class="nav-badge" id="ioBadge">8/8</span>
+      </div>
+      <div class="nav-item" data-view="topics" id="nav-topics">
+        <span class="nav-icon">T</span>
+        <span class="nav-lbl">ROS Topics</span>
+        <span class="nav-badge" id="topicBadge">0/2</span>
+      </div>
+      <div class="nav-item" data-view="navigation" id="nav-navigation">
+        <span class="nav-icon">◰</span>
+        <span class="nav-lbl">Navigation</span>
+      </div>
+      <div class="nav-item disabled">
+        <span class="nav-icon">!</span>
+        <span class="nav-lbl">Diagnostics</span>
+      </div>
+
+      <div class="nav-section-lbl" style="margin-top:auto">System</div>
+      <div class="nav-item settings-item" id="nav-settings">
+        <span class="nav-icon">⚙</span>
+        <span class="nav-lbl">Settings</span>
+      </div>
+    </nav>
+
+    <!-- WORKSPACE -->
+    <div class="hmi-workspace">
+
+      <!-- LOW BATTERY WARNING BANNER -->
+      <div id="lowBatteryBanner" class="alert-banner dngr" style="display: none; align-items: center; gap: 12px; margin: 12px; padding: 14px 20px; border-radius: 8px; animation: blink-bg 1.0s infinite alternate; box-shadow: 0 4px 12px rgba(198,40,40,0.25); border: 2px solid var(--rd); background: var(--rd-bg);">
+        <span style="font-size: 1.5rem; animation: pulse 1.0s infinite;">🚨</span>
+        <div style="flex: 1;">
+          <h4 style="margin: 0; font-family: var(--fu); font-size: 0.85rem; font-weight: 800; color: var(--rd); letter-spacing: 0.05em; text-transform: uppercase;">BATTERY EXHAUSTED / BATERAI HABIS!</h4>
+          <p style="margin: 4px 0 0 0; font-size: 0.70rem; color: var(--t2); font-weight: 600;">Voltage is critically low (<span id="lowBatteryVoltage" style="font-family: var(--fm); font-weight: 800;">--.-</span> V). Please drive the AMR to a charging station immediately.</p>
+        </div>
+      </div>
+
+      <!-- TOOLBAR - Drive -->
+      <div class="hmi-toolbar" id="toolbar-drive">
+        <div class="tb-bc">
+          <span>AMR YMPI 2.0</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-act">Drive Control</span>
+        </div>
+        <div class="tb-sep"></div>
+        <span
+          style="font-family:var(--fm);font-size:.58rem;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap">Panels:</span>
+        <button class="tb-btn on" data-panel="p-motion" data-view="drive"><span class="tb-pip"></span>Motion</button>
+        <button class="tb-btn on" data-panel="p-tele" data-view="drive"><span class="tb-pip"></span>Telemetry</button>
+        <button class="tb-btn on" data-panel="p-canvas" data-view="drive"><span
+            class="tb-pip"></span>Trajectory</button>
+      </div>
+
+      <!-- TOOLBAR - I/O (hidden initially) -->
+      <div class="hmi-toolbar" id="toolbar-io" style="display:none">
+        <div class="tb-bc">
+          <span>AMR YMPI 2.0</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-act">I/O Module</span>
+        </div>
+        <div class="tb-sep"></div>
+        <span
+          style="font-family:var(--fm);font-size:.58rem;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap">Panels:</span>
+        <button class="tb-btn on" data-panel="p-di" data-view="io"><span class="tb-pip"></span>Digital Inputs</button>
+        <button class="tb-btn on" data-panel="p-do" data-view="io"><span class="tb-pip"></span>Digital Outputs</button>
+        <button class="tb-btn on" data-panel="p-iomap" data-view="io"><span class="tb-pip"></span>I/O Map</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" id="tbDoAllOn">All DO On</button>
+        <button class="tb-btn dngr" id="tbDoAllOff">All DO Off</button>
+      </div>
+
+      <!-- TOOLBAR - ROS Topics -->
+      <div class="hmi-toolbar" id="toolbar-topics" style="display:none">
+        <div class="tb-bc">
+          <span>AMR YMPI 2.0</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-act">ROS Topics</span>
+        </div>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" id="tbRefreshTopics">Refresh List</button>
+        <button class="tb-btn dngr" id="tbStopEcho">Stop Echo</button>
+      </div>
+
+      <!-- TOOLBAR - Navigation -->
+      <div class="hmi-toolbar" id="toolbar-navigation" style="display:none">
+        <div class="tb-bc">
+          <span>AMR YMPI 2.0</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-act">Navigation</span>
+        </div>
+        <div class="tb-sep"></div>
+        <span
+          style="font-family:var(--fm);font-size:.58rem;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap">Panels:</span>
+        <button class="tb-btn on" data-panel="p-nav-map" data-view="navigation"><span class="tb-pip"></span>Map
+          View</button>
+        <button class="tb-btn on" data-panel="p-nav-pose-stations" data-view="navigation"><span
+            class="tb-pip"></span>Stations</button>
+        <button class="tb-btn on" data-panel="p-nav-controls" data-view="navigation"><span
+            class="tb-pip"></span>Controls</button>
+        <button class="tb-btn" data-panel="p-nav-log" data-view="navigation"><span
+            class="tb-pip"></span>Log</button>
+        <button class="tb-btn on" data-panel="p-nav-zones" data-view="navigation"><span
+            class="tb-pip"></span>Restrictions</button>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="hmi-content">
+
+        <!-- ======================== VIEW: DRIVE ======================== -->
+        <div class="view active" id="view-drive">
+
+          <!-- Position summary bar (always visible) -->
+          <div class="pos-bar">
+            <div class="pos-card cx">
+              <div class="pos-lbl">X Position</div>
+              <div class="pos-val"><span id="xPos">0.00</span></div>
+              <div class="pos-unit">meters</div>
+            </div>
+            <div class="pos-card cy">
+              <div class="pos-lbl">Y Position</div>
+              <div class="pos-val"><span id="yPos">0.00</span></div>
+              <div class="pos-unit">meters</div>
+            </div>
+            <div class="pos-card ct">
+              <div class="pos-heading-main">
+                <div class="pos-lbl">Heading θ</div>
+                <div class="pos-val"><span id="heading">0.00</span></div>
+                <div class="pos-unit" id="headingUnit">radians</div>
+              </div>
+              <div class="angle-sw" role="group" aria-label="Heading unit">
+                <button type="button" class="angle-btn active" data-angle-unit="rad">Rad</button>
+                <button type="button" class="angle-btn" data-angle-unit="deg">Deg</button>
+              </div>
+            </div>
+            <div class="pos-controls">
+              <div class="pos-ctrl-lbl">Quick Actions</div>
+              <div class="ctrl-btn-row">
+                <button class="ctrl-btn" id="resetOdom">Reset Odom</button>
+              </div>
+              <div class="ctrl-btn-row">
+                <button class="ctrl-btn" id="resetEnc">Reset Encoder</button>
+              </div>
+              <div class="ctrl-btn-row">
+                <button class="ctrl-btn" id="lidarMotorToggle">Stop Lidar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Front Laser Sensor Panel (Full Width above Motion & Trajectory Map) -->
+          <div class="panel prd" id="p-front-laser" style="border-top-color: var(--rd); margin-bottom: 12px; transition: all 0.3s ease;">
+            <div class="panel-hd">
+              <div class="panel-hd-dot" style="background: var(--rd)"></div>
+              <span class="panel-title">Front Obstacle Laser (CCF-LAS4)</span>
+              <div class="panel-hd-right">
+                <span class="panel-chip font-bold" id="laserStatusBadge" style="background: var(--s2); border: 1px solid var(--b0); font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; color: var(--gn); transition: all 0.3s ease;">SAFE</span>
+              </div>
+            </div>
+            <div class="panel-body-wrap">
+              <div class="panel-body-inner" style="padding: 14px 16px;">
+                <div class="laser-channels-grid-large" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; text-align: center;">
+                  
+                  <div class="laser-channel-lg" id="laserParent1" style="background: var(--s2); border: 2px solid var(--b0); padding: 12px 8px; border-radius: 8px; transition: all 0.3s ease; box-shadow: var(--shd);">
+                    <div style="font-family: var(--fu); font-size: 0.72rem; font-weight: 800; color: var(--t2); margin-bottom: 4px; letter-spacing: 0.05em;">CH 1</div>
+                    <div id="laserCh1" style="font-family: var(--fm); font-size: 1.8rem; font-weight: 900; color: var(--t1);">--</div>
+                    <div style="font-size: 0.58rem; font-weight: 600; color: var(--t3); margin-top: 4px; text-transform: uppercase;">Front-Left 60° </div>
+                  </div>
+
+                  <div class="laser-channel-lg" id="laserParent2" style="background: var(--s2); border: 2px solid var(--b0); padding: 12px 8px; border-radius: 8px; transition: all 0.3s ease; box-shadow: var(--shd);">
+                    <div style="font-family: var(--fu); font-size: 0.72rem; font-weight: 800; color: var(--t2); margin-bottom: 4px; letter-spacing: 0.05em;">CH 2</div>
+                    <div id="laserCh2" style="font-family: var(--fm); font-size: 1.8rem; font-weight: 900; color: var(--t1);">--</div>
+                    <div style="font-size: 0.58rem; font-weight: 600; color: var(--t3); margin-top: 4px; text-transform: uppercase;">Front-Left 30° </div>
+                  </div>
+
+                  <div class="laser-channel-lg" id="laserParent3" style="background: var(--s2); border: 2px solid var(--b0); padding: 12px 8px; border-radius: 8px; transition: all 0.3s ease; box-shadow: var(--shd);">
+                    <div style="font-family: var(--fu); font-size: 0.72rem; font-weight: 800; color: var(--t2); margin-bottom: 4px; letter-spacing: 0.05em;">CH 3 (CENTER)</div>
+                    <div id="laserCh3" style="font-family: var(--fm); font-size: 1.8rem; font-weight: 900; color: var(--t1);">--</div>
+                    <div style="font-size: 0.58rem; font-weight: 600; color: var(--t3); margin-top: 4px; text-transform: uppercase;">Front 0° </div>
+                  </div>
+
+                  <div class="laser-channel-lg" id="laserParent4" style="background: var(--s2); border: 2px solid var(--b0); padding: 12px 8px; border-radius: 8px; transition: all 0.3s ease; box-shadow: var(--shd);">
+                    <div style="font-family: var(--fu); font-size: 0.72rem; font-weight: 800; color: var(--t2); margin-bottom: 4px; letter-spacing: 0.05em;">CH 4</div>
+                    <div id="laserCh4" style="font-family: var(--fm); font-size: 1.8rem; font-weight: 900; color: var(--t1);">--</div>
+                    <div style="font-size: 0.58rem; font-weight: 600; color: var(--t3); margin-top: 4px; text-transform: uppercase;">Front-Right 30° </div>
+                  </div>
+
+                  <div class="laser-channel-lg" id="laserParent5" style="background: var(--s2); border: 2px solid var(--b0); padding: 12px 8px; border-radius: 8px; transition: all 0.3s ease; box-shadow: var(--shd);">
+                    <div style="font-family: var(--fu); font-size: 0.72rem; font-weight: 800; color: var(--t2); margin-bottom: 4px; letter-spacing: 0.05em;">CH 5</div>
+                    <div id="laserCh5" style="font-family: var(--fm); font-size: 1.8rem; font-weight: 900; color: var(--t1);">--</div>
+                    <div style="font-size: 0.58rem; font-weight: 600; color: var(--t3); margin-top: 4px; text-transform: uppercase;">Front-Right 60° </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Magnetic Line Sensor Panel (Full Width & Symmetrical) -->
+          <div class="panel pcy" id="p-magnetic-sensor" style="border-top-color: var(--cy); margin-bottom: 12px; transition: all 0.3s ease;">
+            <div class="panel-hd">
+              <div class="panel-hd-dot" style="background: var(--cy)"></div>
+              <span class="panel-title">Magnetic Navigation Sensor (CCF-NS16)</span>
+              
+              <!-- Center Symmetrical Readout -->
+              <div style="flex: 1; text-align: center; font-family: var(--fm); font-size: 1.1rem; font-weight: 900; color: var(--cy);" id="deviationHeaderContainer">
+                <span id="deviationText" style="transition: all 0.2s ease;">--</span>
+              </div>
+
+              <div class="panel-hd-right">
+                <span class="panel-chip font-bold" id="magStatusBadge" style="background: var(--s2); border: 1px solid var(--b0); font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; color: var(--rd); transition: all 0.3s ease;">NO TAPE</span>
+              </div>
+            </div>
+            <div class="panel-body-wrap">
+              <div class="panel-body-inner" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 20px;">
+                
+                <!-- 1. 16-Bit Magnetic LED Strip visualization -->
+                <div>
+                  <div style="font-family: var(--fu); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; color: var(--t2); text-transform: uppercase; margin-bottom: 8px; text-align: center;">
+                    Sensor Photodiode / Magnetic LED Strip (16-Bit Map)
+                  </div>
+                  <div class="magnetic-bits-row" style="display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 5px;">
+                    <!-- 16 magnetic bits, left (bit 0 / Point 1) to right (bit 15 / Point 16) -->
+                    <div id="magBit0" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 0 (Point 1 - Left)"></div>
+                    <div id="magBit1" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 1 (Point 2)"></div>
+                    <div id="magBit2" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 2 (Point 3)"></div>
+                    <div id="magBit3" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 3 (Point 4)"></div>
+                    <div id="magBit4" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 4 (Point 5)"></div>
+                    <div id="magBit5" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 5 (Point 6)"></div>
+                    <div id="magBit6" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 6 (Point 7)"></div>
+                    <div id="magBit7" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 7 (Point 8)"></div>
+                    <div id="magBit8" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 8 (Point 9)"></div>
+                    <div id="magBit9" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 9 (Point 10)"></div>
+                    <div id="magBit10" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 10 (Point 11)"></div>
+                    <div id="magBit11" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 11 (Point 12)"></div>
+                    <div id="magBit12" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 12 (Point 13)"></div>
+                    <div id="magBit13" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 13 (Point 14)"></div>
+                    <div id="magBit14" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 14 (Point 15)"></div>
+                    <div id="magBit15" style="height: 12px; background: var(--s3); border: 1px solid var(--b0); border-radius: 4px; transition: all 0.2s ease;" title="Bit 15 (Point 16 - Right)"></div>
+                  </div>
+                </div>
+
+                <!-- 2. Symmetrical Deviation Slider -->
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-family: var(--fu); font-size: 0.6rem; color: var(--t3); margin-bottom: 6px;">
+                    <span>LEFT LIMIT (-100mm)</span>
+                    <span style="font-weight: bold; color: var(--t2); letter-spacing: 0.05em;">CENTER ALIGNMENT</span>
+                    <span>RIGHT LIMIT (+100mm)</span>
+                  </div>
+                  <div class="deviation-bar-track" style="height: 10px; background: var(--s3); border: 1px solid var(--b0); border-radius: 5px; position: relative;">
+                    <!-- Center reference line -->
+                    <div style="position: absolute; left: 50%; top: -4px; width: 3px; height: 18px; background: var(--b2); border-radius: 2px;"></div>
+                    <!-- Dynamic offset cursor -->
+                    <div id="deviationIndicator" style="position: absolute; left: 50%; top: -5px; width: 16px; height: 20px; background: var(--cy); border-radius: 4px; box-shadow: 0 0 10px var(--cy); transform: translateX(-50%); transition: left 0.15s ease-out;"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Drive grid: left = motion, right = canvas+telemetry -->
+          <div class="drive-grid">
+
+            <!-- LEFT: Motion Control Panel -->
+            <div class="panel por" id="p-motion">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--or)"></div>
+                <span class="panel-title">Motion Control</span>
+                <div class="panel-hd-right">
+                  <div
+                    style="font-family:var(--fm);font-size:.62rem;color:var(--t2);padding:0 8px;border:1px solid var(--b1)">
+                    KEYBOARD ENABLED
+                  </div>
+                  <button class="panel-collapse-btn" data-target="p-motion">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="dpad-wrap">
+                    <div class="slider-row">
+                      <label>Max Speed</label>
+                      <input id="speedSlider" type="range" min="0.1" max="2.0" step="0.05" value="0.5">
+                      <span id="speedValue" class="srval">0.50</span>
+                      <span style="color:var(--t3);font-size:.58rem">m/s</span>
+                    </div>
+                    <div class="dpad-row">
+                      <button class="btn" id="U" data-key="u" title="Forward-Left (U)">↖</button>
+                      <button class="btn" id="I" data-key="i" title="Forward (I)">▲</button>
+                      <button class="btn" id="O" data-key="o" title="Forward-Right (O)">↗</button>
+                    </div>
+                    <div class="dpad-row">
+                      <button class="btn" id="J" data-key="j" title="Rotate Left (J)">↺</button>
+                      <button class="btn btn-stop" id="K" data-key="k" title="STOP (K)">■</button>
+                      <button class="btn" id="L" data-key="l" title="Rotate Right (L)">↻</button>
+                    </div>
+                    <div class="dpad-row">
+                      <button class="btn" id="M" data-key="m" title="Backward-Left (M)">↙</button>
+                      <button class="btn" id="Comma" data-key="," title="Backward (,)">▼</button>
+                      <button class="btn" id="Period" data-key="." title="Backward-Right (.)">↘</button>
+                    </div>
+                    <div class="speed-row">
+                      <button class="btn btn-spd" id="Z" title="Speed Down (Z)">−</button>
+                      <div class="speed-badge">
+                        <small>Command Speed</small>
+                        <span class="sv" id="speed">0.30</span>
+                        <span class="su">m/s</span>
+                      </div>
+                      <button class="btn btn-spd" id="Q" title="Speed Up (Q)">＋</button>
+                    </div>
+                    <div class="bars-row">
+                      <div class="bar-col">
+                        <div class="bar-track">
+                          <div id="linearBar" class="bar-fill"></div>
+                        </div>
+                        <div class="bar-lbl"><span>Linear</span><span id="linVal">0.00</span></div>
+                      </div>
+                      <div class="bar-col">
+                        <div class="bar-track">
+                          <div id="angularBar" class="bar-fill"></div>
+                        </div>
+                        <div class="bar-lbl"><span>Angular</span><span id="angVal">0.00</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT column -->
+            <div class="drive-right">
+
+              <!-- Trajectory Map -->
+              <div class="panel pcy" id="p-canvas">
+                <div class="panel-hd">
+                  <div class="panel-hd-dot" style="background:var(--cy)"></div>
+                  <span class="panel-title">Trajectory Map</span>
+                  <div class="panel-hd-right">
+                    <button class="panel-collapse-btn" data-target="p-canvas">▾</button>
+                  </div>
+                </div>
+                <div class="panel-body-wrap">
+                  <div class="panel-body-inner">
+                    <div class="canvas-wrap">
+                      <div class="coord-display"></div>
+                      <canvas id="odomCanvas" width="700" height="340"></canvas>
+                      <div class="canvas-footer">
+                        <div style="font-family:var(--fm);font-size:.6rem;color:var(--t2);letter-spacing:.06em">ODOMETRY
+                          TRAJECTORY</div>
+                        <span class="canvas-scale-chip" id="odomGridScale">GRID 1 m</span>
+                        <div class="canvas-zoom-btns">
+                          <button class="cz-btn" id="zoomOut">−</button>
+                          <button class="cz-btn" id="resetView">⌂</button>
+                          <button class="cz-btn" id="zoomIn">+</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Telemetry -->
+              <div class="panel" id="p-tele">
+                <div class="panel-hd">
+                  <div class="panel-hd-dot" style="background:var(--cy)"></div>
+                  <span class="panel-title">Telemetry</span>
+                  <div class="panel-hd-right">
+                    <button class="panel-collapse-btn" data-target="p-tele">▾</button>
+                  </div>
+                </div>
+                <div class="panel-body-wrap">
+                  <div class="panel-body-inner">
+                    <div class="tele-grid">
+                      <div class="tele-cell">
+                        <div class="tele-lbl">Voltage</div>
+                        <div class="tele-val"><span id="volt">0.0</span> <span
+                            style="font-size:.7rem;opacity:.7">V</span></div>
+                      </div>
+                      <div class="tele-cell">
+                        <div class="tele-lbl">Driver Temp</div>
+                        <div class="tele-val"><span id="temp">0.0</span> <span
+                            style="font-size:.7rem;opacity:.7">°C</span></div>
+                      </div>
+                      <div class="tele-cell">
+                        <div class="tele-lbl">Current L / R</div>
+                        <div class="tele-val"><span id="curL">0.0</span> / <span id="curR">0.0</span> <span
+                            style="font-size:.7rem;opacity:.7">A</span></div>
+                      </div>
+                      <div class="tele-cell">
+                        <div class="tele-lbl">RPM L / R</div>
+                        <div class="tele-val"><span id="rpmL">0</span> / <span id="rpmR">0</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- end drive-right -->
+          </div><!-- end drive-grid -->
+        </div><!-- end view-drive -->
+
+        <!-- ======================== VIEW: I/O ======================== -->
+        <div class="view" id="view-io">
+          <!-- Connection strip -->
+          <div class="conn-strip">
+            <div class="conn-strip-hd">I/O COMM</div>
+            <div class="conn-dot" id="ioConnDot"></div>
+            <div class="conn-field">
+              <div class="cf-lbl">Port</div>
+              <div class="cf-val">/dev/ttyS3</div>
+            </div>
+            <div class="conn-field">
+              <div class="cf-lbl">Baud</div>
+              <div class="cf-val">9600</div>
+            </div>
+            <div class="conn-field">
+              <div class="cf-lbl">Parity</div>
+              <div class="cf-val">None</div>
+            </div>
+            <div class="conn-field">
+              <div class="cf-lbl">Slave ID</div>
+              <div class="cf-val">1</div>
+            </div>
+            <div class="conn-field">
+              <div class="cf-lbl">Protocol</div>
+              <div class="cf-val">Modbus RTU</div>
+            </div>
+            <div class="conn-field" style="margin-left:auto">
+              <div class="cf-lbl">Poll Rate</div>
+              <div class="cf-val">10 Hz</div>
+            </div>
+          </div>
+
+          <!-- DI + DO panels -->
+          <div class="io-grid">
+            <!-- Digital Inputs -->
+            <div class="panel pgn" id="p-di">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--gn)"></div>
+                <span class="panel-title">Digital Inputs — DI</span>
+                <span class="panel-chip" id="diByteBadge">0x00</span>
+                <div class="panel-hd-right">
+                  <button class="panel-collapse-btn" data-target="p-di">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="io-status-strip">
+                    <span>Raw byte:</span>
+                    <span class="io-byte-chip" id="diByteHex">0x00</span>
+                    <span class="io-count">Active: <b id="diActiveCount" style="color:var(--gn)">0</b>/8</span>
+                  </div>
+                  <div class="io-channels" id="diChannels"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Digital Outputs -->
+            <div class="panel por" id="p-do">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--or)"></div>
+                <span class="panel-title">Digital Outputs — DO</span>
+                <span class="panel-chip" id="doByteBadge" style="border-color:var(--or);color:var(--or)">0x00</span>
+                <div class="panel-hd-right">
+                  <button class="panel-collapse-btn" data-target="p-do">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="io-status-strip">
+                    <span>Raw byte:</span>
+                    <span class="io-byte-chip" id="doByteHex" style="color:var(--or)">0x00</span>
+                    <span class="io-count">Active: <b id="doActiveCount" style="color:var(--or)">0</b>/8</span>
+                  </div>
+                  <div class="io-channels" id="doChannels"></div>
+                  <div class="bulk-row">
+                    <button class="bulk-btn" id="doAllOn">All On</button>
+                    <button class="bulk-btn dngr" id="doAllOff">All Off</button>
+                    <button class="bulk-btn" id="doToggleAll">Toggle All</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- I/O Map Panel (collapsed by default) -->
+          <div class="panel coll" id="p-iomap">
+            <div class="panel-hd">
+              <div class="panel-hd-dot" style="background:var(--cy)"></div>
+              <span class="panel-title">I/O Map — Waveshare 8DI 8DO RS-485</span>
+              <span class="panel-chip" style="font-size:.58rem">WS-MOD-8DI8DO-RS485</span>
+              <div class="panel-hd-right">
+                <button class="panel-collapse-btn" data-target="p-iomap">▾</button>
+              </div>
+            </div>
+            <div class="panel-body-wrap">
+              <div class="panel-body-inner">
+                <table class="io-map-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Channel</th>
+                      <th>Type</th>
+                      <th>Description</th>
+                      <th>ROS2 Topic</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ioMapBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end view-io -->
+
+        <!-- ======================== VIEW: ROS TOPICS ======================== -->
+        <div class="view" id="view-topics">
+          <div class="topic-grid">
+            <div class="panel pcy" id="p-topic-control">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--cy)"></div>
+                <span class="panel-title">ROS Topic Echo</span>
+                <span class="panel-chip" id="topicCountChip">0 topics</span>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="topic-controls">
+                    <div class="topic-field">
+                      <label class="topic-label" for="topicSearch">Filter</label>
+                      <input class="topic-search" id="topicSearch" type="search" placeholder="/topic name">
+                    </div>
+                    <div class="topic-field">
+                      <label class="topic-label" for="topicSelect1">Echo Slot 1</label>
+                      <select class="topic-select" id="topicSelect1">
+                        <option value="">Loading topics...</option>
+                      </select>
+                    </div>
+                    <div class="topic-field">
+                      <label class="topic-label" for="topicSelect2">Echo Slot 2</label>
+                      <select class="topic-select" id="topicSelect2">
+                        <option value="">Loading topics...</option>
+                      </select>
+                    </div>
+                    <div class="topic-actions">
+                      <button class="topic-btn" id="startEcho">Start Echo</button>
+                      <button class="topic-btn stop" id="stopEcho">Stop</button>
+                    </div>
+                    <div class="topic-hint" id="topicHint">ROS topic list belum dimuat.</div>
+                  </div>
+                  <div class="topic-meta">
+                    <div class="topic-stat">
+                      <span class="topic-label">Active Echo</span>
+                      <b id="topicActiveCount">0/2</b>
+                    </div>
+                    <div class="topic-stat">
+                      <span class="topic-label">Update Rate</span>
+                      <b id="topicRate">idle</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="echo-grid">
+              <div class="echo-slot idle" id="echoSlot1">
+                <div class="echo-slot-hd">
+                  <span class="echo-title" id="echoTitle1">Slot 1</span>
+                  <span class="echo-type" id="echoType1">idle</span>
+                </div>
+                <pre class="echo-body echo-empty" id="echoBody1">No topic selected</pre>
+              </div>
+              <div class="echo-slot idle" id="echoSlot2">
+                <div class="echo-slot-hd">
+                  <span class="echo-title" id="echoTitle2">Slot 2</span>
+                  <span class="echo-type" id="echoType2">idle</span>
+                </div>
+                <pre class="echo-body echo-empty" id="echoBody2">No topic selected</pre>
+              </div>
+            </div>
+          </div>
+        </div><!-- end view-topics -->
+
+        <!-- ======================== VIEW: NAVIGATION ======================== -->
+        <div class="view" id="view-navigation">
+          <div class="nav-grid">
+            <div class="panel pcy" id="p-nav-map">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--cy)"></div>
+                <span class="panel-title">Navigation Map</span>
+                <div class="nav-map-header-actions">
+                  <span class="selected-map-pill" id="selectedMapName" aria-live="polite">No map selected</span>
+                  <button class="panel-action-btn" id="btnChooseMap" type="button" aria-haspopup="dialog"
+                    aria-controls="modalChooseMap" aria-label="Choose navigation map">Choose Map</button>
+                  <button class="panel-collapse-btn" data-target="p-nav-map">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="canvas-wrap nav-map-wrap">
+                    <canvas id="navCanvas" width="800" height="400"></canvas>
+                    <div class="canvas-footer">
+                      <div style="font-family:var(--fm);font-size:.6rem;color:var(--t2);letter-spacing:.06em">2D MAP
+                        NAVIGATION</div>
+                      <div class="canvas-zoom-btns">
+                        <button class="cz-btn wide active" id="navAutoCenter" title="Keep robot centered on map">AUTO
+                          CENTER</button>
+                        <button class="cz-btn" id="navZoomOut">−</button>
+                        <button class="cz-btn" id="navResetView">⌂</button>
+                        <button class="cz-btn" id="navZoomIn">+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel pcy" id="p-nav-pose-stations">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--cy)"></div>
+                <span class="panel-title">Pose & Stations</span>
+                <div class="panel-hd-right">
+                  <button class="panel-collapse-btn" data-target="p-nav-pose-stations">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="nav-status-bar status-idle" id="navStatusBar">
+                    <span class="nav-status-label">Robot Status:</span>
+                    <span class="nav-status-value" id="navStatusValue">IDLE</span>
+                  </div>
+                  <div class="nav-controls-body">
+
+                    <div class="pose-sections-row">
+                      <div class="nav-section pose-section initial-pose-section">
+                        <div class="pose-section-title">
+                          <span>Set Init Pose</span>
+                          <span class="pose-tag">Init</span>
+                        </div>
+                        <div class="goal-pose-inputs">
+                          <div class="goal-field">
+                            <label>X (m)</label>
+                            <input type="number" step="0.1" id="initX" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>Y (m)</label>
+                            <input type="number" step="0.1" id="initY" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>θ (deg)</label>
+                            <input type="number" step="1" id="initYaw" class="mrow-input">
+                          </div>
+                        </div>
+                        <div class="pose-actions">
+                          <button class="topic-btn" id="btnApplyInitialPose">Apply Initial</button>
+                          <button class="topic-btn pose-map-btn-initial" id="btnMapClickInitialPose"
+                            title="Click and drag on map to set initial pose">Set Init Pose</button>
+                        </div>
+                      </div>
+
+                      <div class="nav-section pose-section goal-pose-section">
+                        <div class="pose-section-title">
+                          <span>Set Goal Pose</span>
+                          <span class="pose-tag">Goal</span>
+                        </div>
+                        <div class="goal-pose-inputs">
+                          <div class="goal-field">
+                            <label>X (m)</label>
+                            <input type="number" step="0.1" id="goalX" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>Y (m)</label>
+                            <input type="number" step="0.1" id="goalY" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>θ (deg)</label>
+                            <input type="number" step="1" id="goalYaw" class="mrow-input">
+                          </div>
+                        </div>
+                        <div class="pose-actions">
+                          <button class="topic-btn" id="btnApplyGoal">Apply Goal</button>
+                          <button class="topic-btn pose-map-btn-goal" id="btnMapClickGoal"
+                            title="Click and drag on map to set goal pose">Set Goal Pose</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="nav-section">
+                      <div class="nav-section-header">
+                        <span class="nav-section-title">Station Registry</span>
+                        <button type="button" class="btn-edit-toggle" id="btnEditStations">Edit</button>
+                      </div>
+                      <div class="edit-tools-stations" id="editToolsStations" style="display: none;">
+                        <div class="station-input-grid">
+                          <div class="goal-field">
+                            <label>Name</label>
+                            <input type="text" id="stationName" class="mrow-input" placeholder="Station A">
+                          </div>
+                          <div class="goal-field">
+                            <label>X (m)</label>
+                            <input type="number" step="0.1" id="stationX" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>Y (m)</label>
+                            <input type="number" step="0.1" id="stationY" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>Theta</label>
+                            <input type="number" step="1" id="stationYaw" class="mrow-input">
+                          </div>
+                          <div class="goal-field">
+                            <label>Wait</label>
+                            <input type="number" step="1" min="0" id="stationWait" class="mrow-input" value="0">
+                          </div>
+                        </div>
+                        <div class="station-toolbar">
+                          <button class="topic-btn" id="btnPickStation">Pick On Map</button>
+                          <button class="topic-btn" id="btnAddStation">Add Station</button>
+                          <button class="topic-btn" id="btnSaveStations">Save Stations</button>
+                        </div>
+                      </div>
+                      <div class="station-list" id="stationList"></div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel pcy phide" id="p-nav-log">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--cy)"></div>
+                <span class="panel-title">Navigation Log</span>
+                <div class="panel-hd-right">
+                  <button class="panel-collapse-btn" data-target="p-nav-log">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="nav-log-body">
+                    <div class="nav-log-status-grid">
+                      <div class="nav-log-card">
+                        <span class="nav-log-card-label">Launch</span>
+                        <div class="launch-hint" id="launchHint" role="status" aria-live="polite">
+                          Launch berjalan sebagai background process terpisah. Log tersimpan di ~/.arya_amr/logs.
+                        </div>
+                      </div>
+                      <div class="nav-log-card">
+                        <span class="nav-log-card-label">Save Map</span>
+                        <div class="mapping-save-status" id="mappingSaveStatus" role="status" aria-live="polite">
+                          Siap menyimpan map SLAM Toolbox.
+                        </div>
+                      </div>
+                      <div class="nav-log-card">
+                        <span class="nav-log-card-label">Nav2 Goal</span>
+                        <div class="nav-goal-status" id="navGoalStatusCard" role="status" aria-live="polite">
+                          <span class="nav-goal-dot" id="navGoalStatusDot"></span>
+                          <div class="nav-goal-copy">
+                            <strong id="navGoalStatusTitle">Nav2 Goal</strong>
+                            <span id="navGoalStatusText">Belum ada goal dari web.</span>
+                          </div>
+                          <span class="nav-goal-pill" id="navGoalStatusPill">IDLE</span>
+                        </div>
+                      </div>
+                      <div class="nav-log-card">
+                        <span class="nav-log-card-label">Restriction</span>
+                        <div class="annotation-status" id="annotationStatus" role="status" aria-live="polite">
+                          Pilih map lalu gambar rectangle di canvas.
+                        </div>
+                      </div>
+                      <div class="nav-log-card">
+                        <span class="nav-log-card-label">Mission</span>
+                        <div class="annotation-status" id="missionStatus" role="status" aria-live="polite">
+                          Single mission siap.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="nav-log-stream-wrap">
+                      <span class="nav-log-stream-title">Activity Log</span>
+                      <div class="nav-log-stream" id="navLogStream" role="log" aria-live="polite"
+                        aria-relevant="additions">
+                        <div class="nav-log-empty" id="navLogEmpty">Belum ada log navigation.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel pgn" id="p-nav-controls">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--gn)"></div>
+                <span class="panel-title">Navigation Controls</span>
+                <div class="panel-hd-right">
+                  <button class="panel-collapse-btn" data-target="p-nav-controls">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="nav-controls-body">
+
+                    <div class="nav-section">
+                      <div class="nav-section-title">
+                        ROS Launch Control</div>
+                      <div class="launch-control-grid">
+                        <div class="launch-tile">
+                          <div class="launch-top">
+                            <div class="launch-title">
+                              <strong>Hardware</strong>
+                              <span>alias: amir_hdl</span>
+                            </div>
+                            <span class="launch-state" id="launchStateHardware" role="status"
+                              aria-live="polite">STOPPED</span>
+                          </div>
+                          <button class="topic-btn launch-btn" id="btnLaunchHardware" data-launch="amir_hdl"
+                            aria-label="Start Hardware launch amir_hdl" aria-pressed="false">Start
+                            Hardware</button>
+                        </div>
+                        <div class="launch-tile">
+                          <div class="launch-top">
+                            <div class="launch-title">
+                              <strong>Localization</strong>
+                              <span>alias: local_hdl</span>
+                            </div>
+                            <span class="launch-state" id="launchStateLocal" role="status"
+                              aria-live="polite">STOPPED</span>
+                          </div>
+                          <button class="topic-btn launch-btn" id="btnLaunchLocal" data-launch="local_hdl"
+                            aria-label="Start Localization launch local_hdl" aria-pressed="false">Start
+                            Local</button>
+                        </div>
+                        <div class="launch-tile">
+                          <div class="launch-top">
+                            <div class="launch-title">
+                              <strong>Nav2</strong>
+                              <span>alias: nav_hdl</span>
+                            </div>
+                            <span class="launch-state" id="launchStateNav" role="status"
+                              aria-live="polite">STOPPED</span>
+                          </div>
+                          <button class="topic-btn launch-btn" id="btnLaunchNav" data-launch="nav_hdl"
+                            aria-label="Start Nav2 launch nav_hdl" aria-pressed="false">Start
+                            Nav2</button>
+                        </div>
+                        <div class="launch-tile">
+                          <div class="launch-top">
+                            <div class="launch-title">
+                              <strong>Mapping</strong>
+                              <span>alias: mapping</span>
+                            </div>
+                            <span class="launch-state" id="launchStateMapping" role="status"
+                              aria-live="polite">STOPPED</span>
+                          </div>
+                          <button class="topic-btn launch-btn" id="btnLaunchMapping" data-launch="mapping"
+                            aria-label="Start Mapping launch mapping" aria-pressed="false">Start
+                            Mapping</button>
+                        </div>
+                        <div class="launch-tile">
+                          <div class="launch-top">
+                            <div class="launch-title">
+                              <strong>Record Path</strong>
+                              <span>alias: record_path</span>
+                            </div>
+                            <span class="launch-state" id="launchStateRecordPath" role="status"
+                              aria-live="polite">STOPPED</span>
+                          </div>
+                          <button class="topic-btn launch-btn" id="btnLaunchRecordPath" data-launch="record_path"
+                            aria-label="Start Path Recording launch record_path" aria-pressed="false">Start
+                            Record Path</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="mappingSavePanel" class="mapping-save-panel" hidden aria-hidden="true">
+                      <div class="mapping-save-row">
+                        <div class="mapping-save-title">
+                          <strong>Save Mapping Result</strong>
+                          <span>Target: ~/arya_ws/src/amr_bringup_headless/maps</span>
+                        </div>
+                        <button class="topic-btn" id="btnOpenSaveMap">Save Map</button>
+                      </div>
+                    </div>
+
+                    <div id="pathRecorderPanel" class="path-recorder-panel" hidden aria-hidden="true">
+                      <div class="path-recorder-row">
+                        <div class="path-recorder-title">
+                          <strong>Path Recording Actions</strong>
+                          <span>Active Session Controls</span>
+                        </div>
+                        <div class="row-actions">
+                          <button class="topic-btn" id="btnStartRecording">Start Record</button>
+                          <button class="topic-btn" id="btnStopRecording">Stop Record</button>
+                        </div>
+                      </div>
+                      <div class="path-recorder-row" style="margin-top: 4px;">
+                        <div class="path-recorder-input-wrap">
+                          <input type="text" class="path-recorder-input" id="pathStationName" placeholder="Station name (e.g., Station A)">
+                          <button class="topic-btn" id="btnNameStation" style="height: 32px; padding: 0 12px;">Save Station</button>
+                        </div>
+                      </div>
+                      <div class="path-recorder-status" id="pathRecorderStatus">Ready to control path recorder.</div>
+                    </div>
+
+
+
+                    <div class="nav-section display-features-section collapsed">
+                      <button type="button" class="display-features-toggle-btn" id="btnToggleDisplayFeatures">
+                        Display Features <span>▾</span>
+                      </button>
+                      <div class="nav-checkbox-grid" id="displayFeaturesContent" style="display: none;">
+                        <label class="nav-check-label"><input type="checkbox" id="navShowMap" checked> <span
+                            class="chk-box"></span>Map (Auto-sync)</label>
+                        <label class="nav-check-label"><input type="checkbox" id="navShowRobot" checked> <span
+                            class="chk-box"></span>Robot Triangle</label>
+                        <label class="nav-check-label"><input type="checkbox" id="navShowFootprint" checked> <span
+                            class="chk-box"></span>Robot Polygon</label>
+                        <label class="nav-check-label"><input type="checkbox" id="navShowLocalCostmap" checked> <span
+                            class="chk-box"></span>Local Costmap</label>
+                        <label class="nav-check-label"><input type="checkbox" id="navShowPath" checked> <span
+                            class="chk-box"></span>Path Plan</label>
+                        <label class="nav-check-label"><input type="checkbox" id="navShowGlobalCostmap"> <span
+                            class="chk-box"></span>Global Costmap</label>
+                        <label class="nav-check-label"><input type="checkbox" id="navShowLidar" checked> <span
+                            class="chk-box"></span>Lidar Scans</label>
+                      </div>
+                    </div>
+
+                    <div class="nav-section controls-log-section">
+                      <div class="nav-section-title">Navigation Log History</div>
+                      <div class="nav-controls-log-stream" id="navControlsLogStream" role="log" aria-live="polite">
+                        <div class="nav-log-empty" id="navControlsLogEmpty">Belum ada log navigation.</div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel por" id="p-nav-zones">
+              <div class="panel-hd">
+                <div class="panel-hd-dot" style="background:var(--or)"></div>
+                <span class="panel-title">Restrictions &amp; Missions</span>
+                <div class="panel-hd-right">
+                  <button class="panel-collapse-btn" data-target="p-nav-zones">▾</button>
+                </div>
+              </div>
+              <div class="panel-body-wrap">
+                <div class="panel-body-inner">
+                  <div class="nav-controls-body">
+                    <div class="nav-section">
+                      <div class="nav-section-header">
+                        <span class="nav-section-title">Restriction Areas</span>
+                        <button type="button" class="btn-edit-toggle" id="btnEditRestrictions">Edit</button>
+                      </div>
+                      <div class="edit-tools-restrictions" id="editToolsRestrictions" style="display: none;">
+                        <div class="annotation-toolbar">
+                          <button class="topic-btn" id="btnDrawKeepout">Draw Restriction</button>
+                          <button class="topic-btn" id="btnSaveAnnotations">Save Restrictions</button>
+                          <button class="topic-btn stop" id="btnClearKeepoutDraft">Cancel Draw</button>
+                        </div>
+                      </div>
+                      <div class="annotation-list" id="keepoutZoneList"></div>
+                    </div>
+
+                    <div class="nav-section">
+                      <div class="nav-section-title">Mission Mode</div>
+                      <div class="mission-mode-row">
+                        <button class="mission-mode-btn active" id="missionModeSingle" data-mode="single">Single</button>
+                        <button class="mission-mode-btn" id="missionModeQueue" data-mode="queue">Queued</button>
+                      </div>
+                      <div class="mission-queue-list" id="missionQueueList"></div>
+                      <div class="mission-toolbar">
+                        <button class="topic-btn" id="btnStartQueue">Start Queue</button>
+                        <button class="topic-btn stop" id="btnCancelQueue">Cancel Queue</button>
+                        <button class="topic-btn" id="btnClearQueue">Clear Queue</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end hmi-content -->
+    </div><!-- end hmi-workspace -->
+  </div><!-- end hmi-body -->
+
+  <!-- STATUS BAR -->
+  <div class="hmi-statusbar">
+    <div class="sb-item"><span class="sb-dot ok"></span>SYS READY</div>
+    <div class="sb-item"><span class="sb-dot warn" id="sbDriveDot"></span>DRIVE: <span id="sbDriveText"
+        style="margin-left:4px">IDLE</span></div>
+    <div class="sb-item"><span class="sb-dot warn" id="sbIoDot"></span>I/O: <span id="sbIoText"
+        style="margin-left:4px">OFFLINE</span></div>
+    <div class="sb-msg" id="sbMsg">System initializing...</div>
+    <div class="sb-clock" id="sbClock">--:--:--</div>
+  </div>
+
+  <!-- ============================================================ SPEED INDICATOR -->
+  <div id="speedIndicator">SPEED UP</div>
+
+  <!-- ============================================================ MODAL BACKDROP -->
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+
+  <!-- MODAL: Settings -->
+  <div class="modal" id="modalSettings">
+    <div class="modal-panel">
+      <div class="modal-hd">
+        <span>⚙</span>
+        <span class="modal-title">System Settings</span>
+        <button class="modal-close" data-close="modalSettings">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="mrow">
+          <div class="mrow-lbl">WebSocket Host</div>
+          <input class="mrow-input" id="wsHost" type="text" value="" placeholder="Auto-detect from hostname">
+        </div>
+        <div class="mrow">
+          <div class="mrow-lbl">WebSocket Port</div>
+          <input class="mrow-input" id="wsPort" type="text" value="8000">
+        </div>
+        <div class="mrow">
+          <div class="mrow-lbl">Map Folder Path</div>
+          <input class="mrow-input" type="text" value="amr_bringup_headless/maps" readonly style="color:var(--t2)">
+        </div>
+        <div class="mrow">
+          <div class="mrow-info">Changes to host/port require page reload. Robot firmware version: YMPI-FW-2.0.1</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" data-close="modalSettings">Cancel</button>
+        <button class="modal-btn mconf" id="saveSettings">Apply &amp; Reload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Confirm Reset -->
+  <div class="modal" id="modalConfirm">
+    <div class="modal-panel modal-warn">
+      <div class="modal-hd">
+        <span>⚠</span>
+        <span class="modal-title" id="confirmTitle">Confirm Action</span>
+        <button class="modal-close" data-close="modalConfirm">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-row">
+          <div class="confirm-icon">⚠</div>
+          <div class="confirm-text">
+            <strong id="confirmHeading">RESET ODOMETRY</strong>
+            <span id="confirmMsg">This will reset the robot's X/Y position and heading to zero. Are you sure?</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" data-close="modalConfirm">Cancel</button>
+        <button class="modal-btn mdngr" id="confirmOk">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Save SLAM Toolbox Map -->
+  <div class="modal" id="modalSaveMap" role="dialog" aria-modal="true" aria-labelledby="saveMapTitle">
+    <div class="modal-panel">
+      <div class="modal-hd">
+        <span>MAP</span>
+        <span class="modal-title" id="saveMapTitle">Save Mapping Result</span>
+        <button class="modal-close" data-close="modalSaveMap">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="mrow">
+          <div class="mrow-lbl">File Name</div>
+          <input class="mrow-input" id="saveMapName" type="text" placeholder="contoh: lantai_1">
+        </div>
+        <div class="mrow">
+          <div class="mrow-info">
+            Nama akan disimpan sebagai prefix file di ~/arya_ws/src/amr_bringup_headless/maps. Sistem akan memanggil
+            /slam_toolbox/save_map lalu /slam_toolbox/serialize_map.
+          </div>
+        </div>
+        <div class="mapping-save-status" id="saveMapModalStatus" role="status" aria-live="polite">
+          Gunakan huruf, angka, titik, underscore, atau dash.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" data-close="modalSaveMap">Cancel</button>
+        <button class="modal-btn mconf" id="btnConfirmSaveMap">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Choose Navigation Map -->
+  <div class="modal" id="modalChooseMap" role="dialog" aria-modal="true" aria-labelledby="chooseMapTitle"
+    aria-describedby="chooseMapDesc">
+    <div class="modal-panel map-picker-modal">
+      <div class="modal-hd">
+        <span>MAP</span>
+        <span class="modal-title" id="chooseMapTitle">Choose Navigation Map</span>
+        <button class="modal-close" data-close="modalChooseMap" aria-label="Close map chooser">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="sr-only" id="chooseMapDesc">
+          Pilih map dari folder amr_bringup_headless/maps. Preview di bawah hanya untuk verifikasi sebelum map dipakai.
+        </p>
+        <div class="mrow">
+          <label class="mrow-lbl" for="modalMapSelect">Map YAML File</label>
+          <select id="modalMapSelect" class="mrow-input" disabled>
+            <option value="">Loading maps...</option>
+          </select>
+        </div>
+        <div class="map-preview-frame" aria-label="Selected map preview">
+          <canvas id="mapPreviewCanvas" class="map-preview-canvas" width="720" height="360" role="img"
+            aria-label="Selected map occupancy preview"></canvas>
+          <div class="map-preview-empty" id="mapPreviewEmpty">Pilih map untuk melihat preview.</div>
+        </div>
+        <div class="choose-map-status" id="chooseMapStatus" role="status" aria-live="polite">
+          Daftar map sedang dimuat.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" data-close="modalChooseMap">Cancel</button>
+        <button class="modal-btn mconf" id="btnConfirmChooseMap" disabled>Use Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nav2 Goal Result -->
+  <div class="modal" id="modalNavGoalResult" role="dialog" aria-modal="true" aria-labelledby="navGoalResultTitle">
+    <div class="modal-panel" id="navGoalResultPanel">
+      <div class="modal-hd">
+        <span id="navGoalResultIcon">i</span>
+        <span class="modal-title" id="navGoalResultTitle">Nav2 Goal Status</span>
+        <button class="modal-close" data-close="modalNavGoalResult">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-row">
+          <div class="confirm-icon" id="navGoalResultBigIcon">i</div>
+          <div class="confirm-text">
+            <strong id="navGoalResultHeading">NAV2 GOAL</strong>
+            <span id="navGoalResultMsg">Status goal belum tersedia.</span>
+            <div class="goal-result-meta" id="navGoalResultMeta"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn mconf" data-close="modalNavGoalResult">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="/js/app.js?v=20260525-frontend" defer></script>
+</body>
+
+</html>

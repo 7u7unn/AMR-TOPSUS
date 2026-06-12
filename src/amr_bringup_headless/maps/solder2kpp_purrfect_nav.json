@@ -1,0 +1,136 @@
+{
+  "map_name": "solder2kpp_purrfect.yaml",
+  "updated_at": "2026-05-29T15:10:18+0700",
+  "zones": [
+    {
+      "id": "zone_mpm0351g_c5b55",
+      "name": "Restriction 1",
+      "enabled": true,
+      "points": [
+        [
+          47.8978,
+          -8.4462
+        ],
+        [
+          100.4352,
+          -10.5544
+        ],
+        [
+          100.5713,
+          -8.9223
+        ],
+        [
+          47.8297,
+          -6.6781
+        ]
+      ]
+    },
+    {
+      "id": "zone_mpm03jbj_gpfo0",
+      "name": "Restriction 2",
+      "enabled": true,
+      "points": [
+        [
+          47.7617,
+          -10.3504
+        ],
+        [
+          100.6394,
+          -12.3225
+        ],
+        [
+          101.1157,
+          -14.1586
+        ],
+        [
+          47.6936,
+          -12.7305
+        ]
+      ]
+    },
+    {
+      "id": "zone_mpm0417p_zd3sr",
+      "name": "Restriction 3",
+      "enabled": true,
+      "points": [
+        [
+          13.1904,
+          -4.842
+        ],
+        [
+          46.6728,
+          -5.9301
+        ],
+        [
+          46.8089,
+          -8.1062
+        ],
+        [
+          12.9182,
+          -7.1541
+        ]
+      ]
+    },
+    {
+      "id": "zone_mpm04eyl_59bkm",
+      "name": "Restriction 4",
+      "enabled": true,
+      "points": [
+        [
+          13.0543,
+          -11.5064
+        ],
+        [
+          13.0543,
+          -9.4663
+        ],
+        [
+          47.0131,
+          -10.3504
+        ],
+        [
+          47.0811,
+          -12.5265
+        ]
+      ]
+    }
+  ],
+  "stations": [
+    {
+      "id": "station_mpezczar_yqa1c",
+      "name": "Station SOLDER",
+      "x": -33.33,
+      "y": -16.08,
+      "theta": 3.12763,
+      "wait_sec": 0.0,
+      "enabled": true
+    },
+    {
+      "id": "station_mplzwtzf_s0zwe",
+      "name": "Station KPP",
+      "x": 105.27,
+      "y": -10.24,
+      "theta": 0.0,
+      "wait_sec": 0.0,
+      "enabled": true
+    },
+    {
+      "id": "station_mplzxfht_qztu9",
+      "name": "Depan CL",
+      "x": 28.32,
+      "y": -8.94,
+      "theta": 3.141593,
+      "wait_sec": 0.0,
+      "enabled": true
+    },
+    {
+      "id": "recorded_kpp",
+      "name": "kpp",
+      "x": 113.2549,
+      "y": -9.8218,
+      "theta": 0.75,
+      "wait_sec": 0.0,
+      "enabled": true
+    }
+  ]
+}

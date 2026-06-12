@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""ROS2 node: line_follower_node
+
+This node reads two registers via Modbus RTU from the magnetic line follower
+sensor (default slave=1, reg=0x0000 count=2) and publishes the two raw register
+values on the `/line_data` topic as a `std_msgs/Float32MultiArray`.
+
+Defaults target port `/dev/ttyUSB3` (user said port is usb3) and baud 9600.
+"""
+
+import time
+import struct
+import serial
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32MultiArray
+
+
+def crc16(data: bytes) -> int:
+    crc = 0xFFFF
+    for b in data:
+        crc ^= b
+        for _ in range(8):
+            crc = (crc >> 1) ^ 0xA001 if crc & 1 else crc >> 1
+    return crc & 0xFFFF
+
+
+def build(addr, fc, reg, count):
+    f = bytearray([addr, fc, reg >> 8, reg & 0xFF, count >> 8, count & 0xFF])
+    c = crc16(bytes(f))
+    f += bytearray([c & 0xFF, c >> 8])
+    return bytes(f)
+
+
+def send_read(ser, req, wait=0.12):
+    ser.reset_input_buffer()
+    ser.write(req)
+    time.sleep(wait)
+    return ser.read(ser.in_waiting or 32)
+
+
+class LineFollowerNode(Node):
+    def __init__(self):
+        super().__init__('line_follower_node')
+
+        # parameters
+        self.declare_parameter('port', '/dev/ttyUSB2')
+        self.declare_parameter('baud', 9600)
+        self.declare_parameter('slave', 4)
+        self.declare_parameter('topic', 'line_data')
+        self.declare_parameter('period', 0.1)
+
+        port = self.get_parameter('port').get_parameter_value().string_value
+        baud = self.get_parameter('baud').get_parameter_value().integer_value
+        self.slave = int(self.get_parameter('slave').get_parameter_value().integer_value)
+        topic = self.get_parameter('topic').get_parameter_value().string_value
+        period = float(self.get_parameter('period').get_parameter_value().double_value)
+
+        self.pub = self.create_publisher(Float32MultiArray, topic, 10)
+
+        try:
+            self.ser = serial.Serial(port, baud, timeout=0.5)
+            self.get_logger().info(f'Opened serial {port} @ {baud}')
+        except Exception as e:
+            self.ser = None
+            self.get_logger().error(f'Failed to open serial {port}: {e}')
+
+        # 3-point sliding window history buffer for deviation filtering
+        self.deviation_history = []
+
+        self.timer = self.create_timer(period, self.timer_callback)
+
+    def timer_callback(self):
+        if not self.ser or not self.ser.is_open:
+            self.get_logger().warning('Serial port not open; skipping read')
+            return
+
+        req = build(self.slave, 0x03, 0x0000, 0x0002)
+        resp = send_read(self.ser, req, wait=0.12)
+
+        if not resp:
+            self.get_logger().debug('No response from sensor')
+            return
+
+        # Typical Modbus read response: addr, fc, bytecount, data..., crc_lo, crc_hi
+        if len(resp) < 7:
+            self.get_logger().warning(f'Unexpected short frame: {len(resp)} bytes')
+            return
+
+        try:
+            # Data payload starts at resp[3], two registers (4 bytes)
+            # Register 0 (resp[3:5]): Median Value (high byte: integer, low byte: decimal)
+            median_int = resp[3]
+            median_dec = resp[4]
+            median = median_int + (median_dec / 10.0)
+            # Register 1 (resp[5:7]): 16-bit position value / bitmap
+            bitmap = struct.unpack('>H', resp[5:7])[0]
+
+            # Invert the 16-bit bitmap because the sensor is Active-Low (tape = 0, no tape = 1)
+            bitmap = (~bitmap) & 0xFFFF
+
+            # Reverse 16-bit bitmap because sensor physical indexing is right-to-left
+            reversed_bitmap = 0
+            for i in range(16):
+                if (bitmap & (1 << i)) != 0:
+                    reversed_bitmap |= (1 << (15 - i))
+            bitmap = reversed_bitmap
+
+            # Count the active bits in the Active-High bitmap
+            active_bits = bin(bitmap).count('1')
+
+            # If the number of active bits is less than 3, treat it as a complete tape dropout / lost line
+            if active_bits < 3:
+                bitmap = 0
+                deviation_mm = 0.0
+                self.deviation_history.clear() # Clear history on tape dropout
+            else:
+                # 8.5 is the physical center of the 16 points. Spacing is 10mm.
+                # Positive = Right side of center, Negative = Left side of center.
+                # Inverted sign (-) to correct left-right direction
+                raw_dev = -(median - 8.5) * 10.0
+                
+                # Apply 3-point sliding window moving average filter to eliminate sensor jitter
+                self.deviation_history.append(raw_dev)
+                if len(self.deviation_history) > 3:
+                    self.deviation_history.pop(0)
+                
+                deviation_mm = sum(self.deviation_history) / len(self.deviation_history)
+        except Exception as e:
+            self.get_logger().error(f'Failed parsing response: {e}  raw={resp.hex().upper()}')
+            return
+
+        msg = Float32MultiArray()
+        # data[0] is the bitmap, data[1] is the filtered deviation in mm
+        msg.data = [float(bitmap), float(deviation_mm)]
+        self.pub.publish(msg)
+
+        self.get_logger().debug(f'Published line data (bitmap={bitmap}, deviation={deviation_mm}mm): {msg.data}')
+
+    def destroy_node(self):
+        if self.ser and self.ser.is_open:
+            try:
+                self.ser.close()
+                self.get_logger().info('Serial port closed')
+            except Exception:
+                pass
+        super().destroy_node()
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = LineFollowerNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

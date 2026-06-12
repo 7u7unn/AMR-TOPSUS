@@ -1,0 +1,125 @@
+@startuml AMR_System_Architecture
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam defaultFontColor #2C2C2A
+skinparam ArrowColor #5b9bd5
+skinparam ArrowThickness 1.5
+skinparam RoundCorner 8
+skinparam Padding 6
+skinparam shadowing false
+
+skinparam rectangle {
+    BackgroundColor #FFFFFF
+    BorderColor #5b9bd5
+    FontColor #2C2C2A
+    BorderThickness 1
+}
+
+skinparam package {
+    BackgroundColor #F1EFE8
+    BorderColor #888780
+    FontColor #2C2C2A
+    BorderThickness 1.5
+}
+
+skinparam note {
+    BackgroundColor #FAEEDA
+    BorderColor #BA7517
+    FontColor #412402
+    FontSize 10
+}
+
+title <b>AMR System Architecture</b>\nROS 2 Humble | Mixed Indoor-Outdoor Navigation | PT. XYZ
+
+' ─────────────────────────────────────────────
+' LAYER 1 — Web Interface
+' ─────────────────────────────────────────────
+package "1. Lapisan Web Interface" as WEB #E1F5EE {
+    rectangle "Antarmuka Web\n(Dashboard)" as DASH #9FE1CB
+    rectangle "Kontrol Jarak Jauh\n(Teleop / Remote)" as REMOTE #9FE1CB
+    rectangle "Monitoring Telemetri" as TELEM #9FE1CB
+
+    DASH --> REMOTE
+    DASH --> TELEM
+}
+
+' ─────────────────────────────────────────────
+' LAYER 3 — Sensor Fusion & Drivers
+' ─────────────────────────────────────────────
+package "3. Lapisan Sensor Fusion & Drivers" as SENSOR #EEEDFE {
+    rectangle "Driver IMU N100\n[Orientasi / Percepatan]" as IMU #AFA9EC
+    rectangle "Data Odometri\n[Feedback Encoder]" as ODOM #AFA9EC
+    rectangle "Driver LiDAR\nSLLiDAR A2M7" as LIDAR #AFA9EC
+    rectangle "Robot Localization\n(Filter EKF)" as EKF #AFA9EC
+
+    IMU --> EKF : Orientasi /\nPercepatan
+    ODOM --> EKF : Data encoder
+}
+
+' ─────────────────────────────────────────────
+' LAYER 2 — Navigation Stack
+' ─────────────────────────────────────────────
+package "2. Lapisan Navigation Stack (ROS 2 Humble)" as NAV #E6F1FB {
+    rectangle "SLAM Toolbox & AMCL\n(Pemetaan & Lokalisasi)" as SLAM #85B7EB
+    rectangle "Nav2 Stack\n(Smac Planner, MPPI, Behavior Tree)" as NAV2 #85B7EB
+
+    SLAM --> NAV2 : Peta (Map) &\nOdom/Map TF
+}
+
+' ─────────────────────────────────────────────
+' LAYER 4 — Motor Control
+' ─────────────────────────────────────────────
+package "4. Lapisan Motor Control" as MOTOR #FAECE7 {
+    rectangle "Safety Laser CCF-LAS4-4M\n(Zona Stop ≤ 20 cm)" as CCF #F0997B
+    rectangle "USB-to-RS485 Bus" as RS485 #D3D1C7
+    rectangle "Motor Driver ZLAC8015D" as DRIVER #F0997B
+    rectangle "Motor BLDC ZLLG80ASM800\n(Differential Drive)" as MOTBLDC #F0997B
+
+    CCF --> RS485 : Hardware Interrupt\n(Berhenti Darurat)
+    RS485 --> DRIVER : Perintah kontrol
+    DRIVER --> MOTBLDC : PWM control
+}
+
+' ─────────────────────────────────────────────
+' POWER SUPPLY
+' ─────────────────────────────────────────────
+rectangle "LiFePO4 Battery\n(Max 54V / Nominal 48V)" as BAT #FAC775
+
+' ─────────────────────────────────────────────
+' INTER-LAYER CONNECTIONS
+' ─────────────────────────────────────────────
+
+' Sensor → Nav Stack
+LIDAR --> NAV2 : Data Scan 2D &\nData Deteksi Obstacle
+EKF --> NAV2 : Odometri\nyang Difilter
+
+' Web → Nav2 (input goal / teleop)
+REMOTE ..> NAV2 : Input Goal / Teleop
+NAV2 ..> TELEM : Status Robot & Odom
+
+' Nav2 → Motor (cmd_vel)
+NAV2 --> RS485 : cmd_vel\n(Perintah Kecepatan)
+
+' Motor feedback → Odometry
+MOTBLDC --> ODOM : Feedback\nEncoder / Odom
+
+' Power
+BAT --> MOTOR : 48V DC
+BAT ..> NAV : 12/19V DC\n(via DC-DC Converter)
+
+' ─────────────────────────────────────────────
+' NOTES
+' ─────────────────────────────────────────────
+note bottom of RS485
+  Semua hardware terhubung via USB-to-RS485:
+  IMU N100 | SLLiDAR A2M7 | ZLAC8015D | CCF-LAS4-4M
+end note
+
+note right of CCF
+  Safety layer independen dari Nav2.
+  Interrupt langsung ke motor driver
+  tanpa melalui navigation stack.
+end note
+
+@enduml

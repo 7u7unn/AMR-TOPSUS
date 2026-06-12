@@ -1,0 +1,53 @@
+{
+  "map_name": "cl_6mei.yaml",
+  "updated_at": "2026-05-26T08:51:50+0700",
+  "zones": [
+    {
+      "id": "zone_mpkvn7g6_qwuty",
+      "name": "Restriction 1",
+      "enabled": true,
+      "points": [
+        [
+          0.4383,
+          -2.7357
+        ],
+        [
+          1.2285,
+          -2.6962
+        ],
+        [
+          1.1363,
+          -3.5658
+        ],
+        [
+          0.4251,
+          -3.5263
+        ]
+      ]
+    },
+    {
+      "id": "zone_mplzczur_rnqii",
+      "name": "Restriction 2",
+      "enabled": true,
+      "points": [
+        [
+          0.8586,
+          -0.6931
+        ],
+        [
+          1.7668,
+          -0.7409
+        ],
+        [
+          2.0536,
+          -2.4844
+        ],
+        [
+          0.8705,
+          -2.4605
+        ]
+      ]
+    }
+  ],
+  "stations": []
+}

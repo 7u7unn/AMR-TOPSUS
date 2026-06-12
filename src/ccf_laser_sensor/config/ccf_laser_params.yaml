@@ -1,0 +1,35 @@
+# config/ccf_laser_params.yaml
+# Parameters for the CCF-LAS4-4M 5-channel laser obstacle avoidance sensor node.
+#
+# Model:    CCF-LAS4-4M  (Beijing Xintuo Future Technology Co., Ltd.)
+# Protocol: RS485, Modbus RTU
+# Channels: 5 valid distance beams, 180° ×25° FOV, range 1–700 cm
+
+ccf_laser_node:
+  ros__parameters:
+
+    # ── Serial port ──────────────────────────────────────────────────────────
+    # Full by-path symlink – stable across reboots.
+    port: '/dev/serial/by-path/pci-0000:00:14.0-usb-0:3.3:1.0-port0'
+    baud: 9600          # factory default; change if re-configured
+
+    # ── Modbus ───────────────────────────────────────────────────────────────
+    slave:     2        # Modbus slave address (1 = factory default)
+    start_reg: 0        # first register to read (0x0000 = channel 1)
+    num_channels: 5     # first 5 registers carry distance data
+
+    # ── Polling ──────────────────────────────────────────────────────────────
+    period: 0.05        # 20 Hz  (sensor response time ≈ 30 ms → max ~33 Hz)
+
+    # ── Topics ───────────────────────────────────────────────────────────────
+    topic_dist: '/front_laser'      # std_msgs/Float32MultiArray  (5 raw values)
+    topic_scan: '/front_laser_scan' # sensor_msgs/LaserScan
+
+    # ── LaserScan frame ──────────────────────────────────────────────────────
+    frame_id: 'ccf_laser_link'
+
+    # ── Range conversion ─────────────────────────────────────────────────────
+    # The sensor returns distances in mm (1 raw unit = 1 mm).
+    # Multiply raw value by range_scale to get metres.
+    range_scale: 0.001   # mm → m
+    range_max_m: 7.0     # 700 cm = 7 m  (sensor maximum)
