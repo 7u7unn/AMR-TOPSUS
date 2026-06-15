@@ -1,0 +1,180 @@
+=== CONTENT OF Preliminary Design Review.docx ===
+
+
+[TABLE (17x6)]
+  Row 1:  | UNIVERSITAS AIRLANGGA FAKULTAS TEKNOLOGI MAJU DAN MULTIDISIPLIN TEKNIK ROBOTIKA DAN KECERDASAN BUATAN Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502 Laman : https://ftmm.unair.ac.id,  e-mail : info.ftmm@unair.ac.id | UNIVERSITAS AIRLANGGA FAKULTAS TEKNOLOGI MAJU DAN MULTIDISIPLIN TEKNIK ROBOTIKA DAN KECERDASAN BUATAN Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502 Laman : https://ftmm.unair.ac.id,  e-mail : info.ftmm@unair.ac.id | UNIVERSITAS AIRLANGGA FAKULTAS TEKNOLOGI MAJU DAN MULTIDISIPLIN TEKNIK ROBOTIKA DAN KECERDASAN BUATAN Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502 Laman : https://ftmm.unair.ac.id,  e-mail : info.ftmm@unair.ac.id | UNIVERSITAS AIRLANGGA FAKULTAS TEKNOLOGI MAJU DAN MULTIDISIPLIN TEKNIK ROBOTIKA DAN KECERDASAN BUATAN Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502 Laman : https://ftmm.unair.ac.id,  e-mail : info.ftmm@unair.ac.id | UNIVERSITAS AIRLANGGA FAKULTAS TEKNOLOGI MAJU DAN MULTIDISIPLIN TEKNIK ROBOTIKA DAN KECERDASAN BUATAN Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502 Laman : https://ftmm.unair.ac.id,  e-mail : info.ftmm@unair.ac.id
+  Row 2: DOKUMENTASI PERANCANGAN PRODUK | DOKUMENTASI PERANCANGAN PRODUK | DOKUMENTASI PERANCANGAN PRODUK | DOKUMENTASI PERANCANGAN PRODUK | DOKUMENTASI PERANCANGAN PRODUK | DOKUMENTASI PERANCANGAN PRODUK
+  Row 3: Judul Proyek | Judul Proyek | Judul Proyek | Prototipe Autonomous Mobile Robot (AMR) untuk Navigasi Indoor Berbasis Pemetaan dan Perencanaan Jalur Otonom | Prototipe Autonomous Mobile Robot (AMR) untuk Navigasi Indoor Berbasis Pemetaan dan Perencanaan Jalur Otonom | Prototipe Autonomous Mobile Robot (AMR) untuk Navigasi Indoor Berbasis Pemetaan dan Perencanaan Jalur Otonom
+  Row 4: Jenis Dokumen | Jenis Dokumen | Jenis Dokumen | Preliminary Design Review (PDR) | Preliminary Design Review (PDR) | Preliminary Design Review (PDR)
+  Row 5: Nomor Dokumen | Nomor Dokumen | Nomor Dokumen | - | - | -
+  Row 6: Nomor Revisi | Nomor Revisi | Nomor Revisi | 0 | 0 | 0
+  Row 7: Nama File | Nama File | Nama File | Preliminary Design Review.docx | Preliminary Design Review.docx | Preliminary Design Review.docx
+  Row 8: Jumlah Halaman | Jumlah Halaman | Jumlah Halaman | 20 halaman (termasuk lembar sampul ini) | 20 halaman (termasuk lembar sampul ini) | 20 halaman (termasuk lembar sampul ini)
+  Row 9: Data Pengusul | Data Pengusul | Data Pengusul | Data Pengusul | Data Pengusul | Data Pengusul
+  Row 10: Pengusul | Pengusul | Muhammad Jundi Al Ghifari (163231042) | Muhammad Jundi Al Ghifari (163231042) | Jabatan  Tanda Tangan | Mahasiswa
+  Row 11: Pengusul | Pengusul | Alvin Hongara (163231043) | Alvin Hongara (163231043) | Jabatan  Tanda Tangan | Mahasiswa
+  Row 12: Pengusul | Pengusul | Moch. Shultan Ali S. (1632310140) | Moch. Shultan Ali S. (1632310140) | Jabatan  Tanda Tangan | Mahasiswa
+  Row 13: Tanggal Usulan | Tanggal Usulan | 05/06/2026 | 05/06/2026 | 05/06/2026 | 05/06/2026
+  Row 14: Disetujui Oleh | Disetujui Oleh | Rodik Wahyu Indrawan, S.ST., M.Tr.T. | Rodik Wahyu Indrawan, S.ST., M.Tr.T. | Jabatan  Tanda Tangan | Pengampu I
+  Row 15: Tanggal Persetujuan | Tanggal Persetujuan | xx/06/2026 | xx/06/2026 | xx/06/2026 | xx/06/2026
+  Row 16: Lembaga | Lembaga | Program Studi Teknik Robotika dan Kecerdasan Buatan Fakultas Teknologi Maju dan Multidisiplin Universitas Airlangga | Program Studi Teknik Robotika dan Kecerdasan Buatan Fakultas Teknologi Maju dan Multidisiplin Universitas Airlangga | Program Studi Teknik Robotika dan Kecerdasan Buatan Fakultas Teknologi Maju dan Multidisiplin Universitas Airlangga | Program Studi Teknik Robotika dan Kecerdasan Buatan Fakultas Teknologi Maju dan Multidisiplin Universitas Airlangga
+  Row 17: Alamat | Alamat | Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502, https://ftmm.unair.ac.id, e-mail: info.ftmm@unair.ac.id | Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502, https://ftmm.unair.ac.id, e-mail: info.ftmm@unair.ac.id | Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502, https://ftmm.unair.ac.id, e-mail: info.ftmm@unair.ac.id | Kampus C Mulyorejo Surabaya 60115 Telp. (031) 5936501 Fax (031) 5936502, https://ftmm.unair.ac.id, e-mail: info.ftmm@unair.ac.id
+[END TABLE]
+
+[Title] DAFTAR ISI
+[Heading 1] PENGANTAR	
+[Heading 1] Ringkasan Isi Dokumen
+[Normal] Dokumen ini merangkum rancangan sistem Autonomous Mobile Robot (AMR) berbasis ROS 2 Humble untuk aplikasi navigasi mixed indoor-outdoor di fasilitas industri PT. XYZ. Sistem ini dikendalikan oleh Mini PC i7-4600U yang terintegrasi dengan sensor SLLiDAR A2M7, CCF-LAS4-4M laser sensor, IMU N100, dan motor driver ZLAC8015D. AMR ini difokuskan pada kemampuan pemetaan mandiri (SLAM), lokalisasi presisi (AMCL), dan navigasi penghindaran rintangan dinamis (Nav2). Arsitektur ini juga menyertakan Web Interface untuk telemetri dan kontrol jarak jauh. Dokumen ini juga membahas manajemen proyek, jadwal kegiatan, dan rencana pengujian yang komprehensif.
+[Heading 2] Tujuan Penulisan Dokumen
+[List Paragraph] Mendokumentasikan rancangan arsitektur sistem AMR berbasis ROS 2 Humble sebagai solusi pengganti AGV konvensional di PT. XYZ. 
+[List Paragraph] Mengidentifikasi kebutuhan fungsional dan performansi sistem navigasi mixed indoor-outdoor tingkat industri. 
+[List Paragraph] Menyusun rencana manajemen proyek, pengujian operasional, dan mitigasi risiko pengembangan sistem AMR.
+[Heading 2] Referensi
+[Normal (Web)] Referensi utama meliputi literatur pemetaan robot, perencanaan jalur, kontrol kendaraan diferensial, dan dokumentasi teknis komponen yang digunakan.
+[Normal (Web)] https://www.mybib.com/j/MeekYummyStingray
+[Normal (Web)] S. Thrun, W. Burgard, D. Fox. Probabilistic Robotics. MIT Press, 2005.
+[Normal (Web)] R. Siegwart, I. R. Nourbakhsh, D. Scaramuzza. Introduction to Autonomous Mobile Robots. MIT Press, 2nd ed., 2011.
+[Normal (Web)] RoboPeak RPLIDAR A2M7 User Manual
+[Normal (Web)] NAV2 Docs
+[Heading 2] Daftar Singkatan
+[Normal] AMR : Autonomous Mobile Robot
+[Normal] ROS : Robot Operating System
+[Normal] SLAM : Simultaneous Localization and Mapping
+[Normal] Nav2 : Navigation 2
+[Normal] IMU : Inertial Measurement Unit
+[Normal] EKF : Extended Kalman Filter
+[Normal] API : Application Programming Interface
+
+[TABLE (7x2)]
+  Row 1: Singkatan | Arti
+  Row 2: IMU | Inertial Measurement Unit
+  Row 3: PID | Proportional Integral Derivative
+  Row 4: PWM | Pulse Width Modulation
+  Row 5: OGM | Occupancy Grid Mapping
+  Row 6: RPLIDAR | RoboPeak RPLIDAR A2M7
+  Row 7: ICP | Iterative Closest Point
+[END TABLE]
+
+[Heading 1] PROPOSAL PENGEMBANGAN PROYEK
+[Heading 2] Latar Belakang
+[font-claude-response-body] PT. XYZ saat ini membutuhkan sistem logistik internal yang andal untuk pemindahan barang produksi antar gedung. Rute operasional mencakup lintasan mixed indoor-outdoor yang melewati koridor panjang dan area terbuka antar gedung, dengan frekuensi hingga 5 trip per hari.
+[font-claude-response-body] Sistem AGV konvensional yang sebelumnya digunakan mengandalkan pita magnetik sebagai jalur navigasi. Ketergantungan terhadap infrastruktur fisik ini menimbulkan dua permasalahan utama di lapangan: pertama, robot kerap keluar dari jalur magnetik akibat keausan pita atau gangguan permukaan lantai, yang menyebabkan operasi terhenti dan membutuhkan intervensi operator; kedua, sensor obstacle pada AGV lama memiliki waktu respons yang lambat sehingga tidak mampu merespons rintangan dinamis secara memadai, meningkatkan risiko tabrakan dan downtime.
+[font-claude-response-body] Oleh karena itu, dikembangkan sistem Autonomous Mobile Robot (AMR) berbasis ROS 2 Humble dan Nav2 stack sebagai pengganti AGV konvensional. AMR ini mengandalkan pemetaan berbasis LiDAR dan sistem navigasi cerdas yang memungkinkan rekonfigurasi rute secara dinamis tanpa bergantung pada infrastruktur fisik, sekaligus mampu mendeteksi dan menghindari rintangan secara real-time di sepanjang rute operasional.
+[Heading 3] Informasi Pendukung masalah
+[font-claude-response-body] Berdasarkan observasi lapangan di PT. XYZ, sistem AGV konvensional berbasis magnetic line menghadapi sejumlah permasalahan operasional yang berdampak langsung pada efisiensi distribusi barang antar gedung.
+[font-claude-response-body] Rute operasional yang dilalui mencakup koridor panjang indoor dan segmen outdoor antar gedung, dengan kondisi permukaan dan pencahayaan yang bervariasi. Pada segmen outdoor, perubahan kondisi permukaan lantai maupun gangguan eksternal dapat menyebabkan AGV kehilangan jalur magnetik. Tercatat rata-rata [X] kejadian keluar jalur per minggu, dengan rata-rata waktu pemulihan per kejadian mencapai [X] menit, yang secara langsung menghambat kelancaran [X] trip harian yang dijadwalkan.
+[font-claude-response-body] Selain itu, sensor obstacle pada AGV lama memiliki waktu respons rata-rata [X] milidetik, yang tidak memadai untuk mendeteksi rintangan dinamis seperti pergerakan personel atau peralatan di jalur operasional. Kondisi ini meningkatkan risiko tabrakan dan memaksa intervensi manual operator, yang pada akhirnya menurunkan efisiensi distribusi barang dan berpotensi mengganggu kontinuitas lini produksi PT. XYZ.
+[Heading 3] Analisis Masalah
+[font-claude-response-body] Berdasarkan informasi pendukung yang telah dipaparkan, permasalahan pada sistem AGV konvensional di PT. XYZ dapat diidentifikasi menjadi tiga akar masalah utama:
+[font-claude-response-body] Infrastruktur navigasi kaku
+[font-claude-response-body] Sistem AGV sepenuhnya bergantung pada jalur magnetik fisik. Setiap perubahan rute atau kerusakan pita mengharuskan modifikasi infrastruktur secara langsung, yang membutuhkan waktu dan biaya tambahan serta berpotensi menghentikan operasional distribusi barang.Respons obstacle yang tidak memadai
+[font-claude-response-body] Respos obstacle yang kurang memadai
+[font-claude-response-body] Sensor obstacle AGV lama memiliki waktu respons yang lambat dan tidak mampu menangani rintangan dinamis secara real-time, sehingga meningkatkan risiko tabrakan dan downtime operasional di sepanjang rute mixed indoor-outdoor.
+[Heading 2] Analisis Kebutuhan Sistem
+[Normal] Kebutuhan sistem diturunkan dari tujuan operasional AMR untuk beroperasi secara mandiri pada rute mixed indoor-outdoor sepanjang kurang lebih 88 meter di fasilitas PT. XYZ, meliputi dua segmen koridor panjang dengan segmen terbuka di antaranya. Sistem harus mampu bergerak dengan kecepatan operasional standar 0,7 m/s, memetakan lingkungan, dan merencanakan rute secara real-time. Arsitektur komputasi berbasis Mini PC i7-4600U dipilih sebagai fondasi operasi untuk mendukung pemrosesan algoritma navigasi secara simultan..
+
+[TABLE (7x4)]
+  Row 1: ID | Kategori | Deskripsi | Prioritas
+  Row 2: F1 | Fungsional | Membuat peta Occupancy Grid area operasional | Tinggi
+  Row 3: F2 | Fungsional | Menentukan jalur global menggunakan Smac Planner (Nav2) | Tinggi
+  Row 4: F3 | Fungsional | Menjalankan path following menggunakan MPPI Controller | Tinggi
+  Row 5: F4 | Fungsional | Melakukan lokalisasi menggunakan AMCL pada peta yang telah dibuat | Tinggi
+  Row 6: N1 | Non-fungsional | Beroperasi pada kecepatan standar 0,7 m/s sepanjang rute operasional | Sedang
+  Row 7: N2 | Non-fungsional | Fusi data IMU dan odometri melalui EKF untuk meminimalkan drift | Sedang
+[END TABLE]
+
+
+[TABLE (1x1)]
+  Row 1: 
+[END TABLE]
+
+
+[TABLE (1x1)]
+  Row 1: 
+[END TABLE]
+
+[Heading 2] Kebutuhan Desain Sistem
+[Normal] Hardware yang digunakan dalam sistem AMR terdiri dari:
+[List Paragraph] Mini PC i7-4600U sebagai unit komputasi utama, dipilih karena kemampuannya memproses algoritma navigasi probabilistik seperti AMCL dan EKF secara simultan tanpa bottleneck.
+[List Paragraph] SLLiDAR A2M7 sebagai sensor utama pemetaan dan lokalisasi berbasis LiDAR 2D.
+[List Paragraph] CCF-LAS4-4M sebagai safety laser scanner untuk redundansi sistem, memberikan lapisan deteksi tambahan guna memastikan keamanan operasional di area yang dilalui personel.
+[List Paragraph] IMU N100 untuk pengukuran percepatan dan orientasi robot yang digunakan dalam fusi data EKF.
+[List Paragraph] Motor ZLLG80ASM800 — BLDC hub motor 8 inci, 48V, dengan kapasitas beban 300kg, torsi 60N.m, dan encoder 4096 PPR — sebagai aktuator penggerak pada konfigurasi differential drive.
+[List Paragraph] Motor Driver ZLAC8015D untuk mengonversi perintah kecepatan dari ROS 2 menjadi sinyal kontrol pada motor ZLLG80ASM800.
+[Normal] Software yang digunakan terdiri dari Ubuntu 22.04 sebagai sistem operasi, ROS 2 Humble sebagai middleware robotika, SLAM Toolbox untuk pemetaan mandiri, Nav2 sebagai navigation stack dengan Smac Planner dan MPPI Controller, Robot Localization (EKF) untuk fusi sensor IMU dan odometri, serta Web Interface untuk telemetri dan kontrol jarak jauh.
+[Heading 2] Kebutuhan Performansi Sistem
+[Normal] Sistem AMR harus memenuhi parameter performansi berikut untuk memastikan keandalan operasional di rute mixed indoor-outdoor PT. XYZ:
+[List Paragraph] Lokalisasi & Navigasi
+[List Paragraph] Akurasi posisi robot selama operasi navigasi otonom: toleransi maksimal ±10 cm terhadap jalur yang direncanakan.
+[List Paragraph] Sistem lokalisasi berbasis AMCL harus mampu mempertahankan konsistensi estimasi posisi sepanjang rute ±88 meter tanpa akumulasi drift yang signifikan, khususnya pada segmen koridor panjang yang rentan terhadap long corridor problem akibat minimnya fitur geometri unik pada dinding lateral.
+[List Paragraph] Peta statis hasil SLAM yang digunakan sebagai referensi navigasi hanya dibuat sekali di awal commissioning. Kualitas peta harus dijaga dari degradasi akibat keterbatasan hardware maupun feature-poor environment pada segmen koridor.
+[List Paragraph] Keamanan & Obstacle Avoidance
+[List Paragraph] Waktu respons sistem dari deteksi obstacle hingga robot berhenti penuh < 500 ms.
+[List Paragraph] CCF-LAS4-4M safety laser scanner dikonfigurasi dengan zona stop pada jarak ≤ 20 cm dari sensor, yang secara langsung menginterupsi sinyal motor tanpa melalui stack navigasi sebagai lapisan keamanan redundan.
+[List Paragraph] Keandalan Operasional
+[List Paragraph] Target keberhasilan penyelesaian trip: 100% dari total trip harian yang dijadwalkan.
+[List Paragraph] Setiap kegagalan trip yang disebabkan oleh gangguan sistem (bukan intervensi operator) harus dapat diidentifikasi dan dimitigasi melalui prosedur recovery yang terdefinisi.
+[Heading 2] Arsitektur Desain Sistem
+[Normal] Arsitektur dibagi menjadi empat lapisan:
+[List Paragraph] Lapisan Web Interface: Akses telemetri dan kontrol jarak jauh.
+[List Paragraph] Lapisan Navigation Stack: Menjalankan eksekusi Nav2 dan Behavior Tree.
+[List Paragraph] Lapisan Sensor Fusion & Drivers: Memproses fusi sensor IMU dan LiDAR melalui EKF.
+[List Paragraph] Lapisan Motor Control: Mengonversi perintah kecepatan menjadi aksi pada Motor Driver ZLAC8015D.
+[Heading 3] Alternatif Solusi
+[Normal] Pendekatan dalam industri umumnya terbagi menjadi navigasi berbasis infrastruktur statis (seperti garis atau rel) dan navigasi otonom dinamis. Navigasi statis memiliki biaya pemeliharaan tinggi dan fleksibilitas rendah.
+[Heading 3] Analisis Solusi
+[Normal] Pendekatan otonom dinamis menggunakan ROS 2 dan Nav2 terbukti memberikan solusi penghindaran halangan secara real-time. Penggunaan Mini PC i7-4600U dipilih karena kemampuannya secara lancar memproses algoritma probabilistik berat seperti AMCL dan EKF tanpa bottleneck komputasi.
+[Heading 3] Solusi yang Dipilih
+[Normal] Solusi akhir menggunakan sistem navigasi otonom berbasis graf (Nav2) dengan fusi sensor ekstensif (LiDAR & IMU) yang dijalankan sepenuhnya pada Mini PC i7-4600U.
+[Heading 3] Karakteristik Produk
+[Normal] Karakteristik produk adalah sistem kendali differential drive murni dengan operasi nirkabel penuh, obstacle avoidance dinamis, serta kemampuan dipantau melalui antarmuka web tersentralisasi.
+[Heading 2] Manajemen Proyek
+[Normal] Manajemen proyek mencakup tahapan penyiapan hardware komputasi, pengembangan driver low-level, implementasi algoritma navigasi cerdas, serta pengujian sistem.
+[Heading 3] Work Breakdown Schedule 
+[Normal] WBS dirancang menjadi:
+[Normal] 1. Persiapan Hardware & Driver: Integrasi Mini PC i7-4600U, odometri ZLAC8015D, dan TF base_link.
+[Normal] 2. Implementasi ROS 2 & High-Level Navigation: Instalasi Ubuntu 22.04, SLAM Toolbox, dan Nav2.
+[Normal] 3. Integrasi Web Interface.
+[Normal] 4. Pengujian Performa Keseluruhan.
+
+[TABLE (6x5)]
+  Row 1: ID | Kegiatan | Deskripsi | Durasi | Deliverable
+  Row 2: W1 | Persiapan Hardware | Pengadaan dan perakitan ESP32, Pi Zero W, sensor, motor, dan driver | 2 minggu | Desain hardware siap
+  Row 3: W2 | Driver Sensor dan Aktuator | Implementasi driver MPU6050, encoder, TB6612FNG, dan UART | 3 minggu | Firmware ESP32 awal
+  Row 4: W3 | Pemetaan dan ICP | Implementasi pembacaan RoboPeak RPLIDAR A1, Occupancy Grid, dan ICP dasar pada Pi | 3 minggu | Modul pemetaan berjalan
+  Row 5: W4 | A* dan Inflasi Peta | Implementasi A*, konfigurasi ruang, dan pengujian jalur | 2 minggu | Perencana jalur fungsional
+  Row 6: W5 | Integrasi dan Pengujian | Integrasi komunikasi Pi-ESP32, uji lintasan, dan tuning kontrol | 2 minggu | Robot dapat bergerak otonom sederhana
+[END TABLE]
+
+[Heading 3] Alur dan Jadwal Kegiatan
+[Normal] Kegiatan dimulai dari pengujian low-level driver (odometry dan IMU), kalibrasi sensor, diakhiri dengan pengaturan parameter Nav2 dan bringup secara keseluruhan.
+
+[TABLE (6x4)]
+  Row 1: Fase | Durasi | Waktu | Milestone
+  Row 2: Persiapan dan Desain | 2 minggu | Minggu 1-2 | Draft desain awal dan pemesanan komponen
+  Row 3: Software | 3 minggu | Minggu 3-5 | Driver encoder, IMU, motor, UART siap
+  Row 4: Hardware | 3 minggu | Minggu 6-8 | Modul pemetaan dan A* berjalan
+  Row 5: Integrasi Sistem | 2 minggu | Minggu 9-10 | Koneksi UART dan kontrol lintasan teruji
+  Row 6: Uji Lapangan & Tuning | 2 minggu | Minggu 11-12 | Validasi navigasi otonom dan penghindaran rintangan
+[END TABLE]
+
+[Heading 3] Rencana Pengujian
+[Normal] Meliputi kalibrasi odometri, pengujian presisi EKF, pengujian akurasi peta SLAM, validasi obstacle avoidance dinamis, serta uji ketahanan koneksi antarmuka web.
+[Heading 3] Rencana Manajemen Risiko
+[Normal] 1. Beban CPU tinggi: Mitigasi dengan optimasi node ROS 2 di i7-4600U.
+[Normal] 2. Isu sinkronisasi waktu: Mitigasi dengan setup chrony/NTP.
+[Normal] 3. Drift odometri: Mitigasi dengan tuning EKF dan IMU.
+
+[TABLE (6x5)]
+  Row 1: Risiko | Kemungkinan | Dampak | Mitigasi | Status
+  Row 2: Keterlambatan komponen | Rendah | Sedang | Pesan cadangan, gunakan alternatif komponen | Dalam pemantauan
+  Row 3: Noise sensor | Tinggi | Sedang | Tambahkan filter elektronik dan kalibrasi rutin | Perlu uji coba
+  Row 4: Gangguan komunikasi UART | Sedang | Tinggi | Gunakan framing CRC, rate limit, dan watchdog timer | Direncanakan
+  Row 5: Drift odometry | Tinggi | Tinggi | Fusion IMU+encoder dan ICP scan matching | Perlu validasi
+  Row 6: Masalah daya | Sedang | Tinggi | Gunakan buck converter terpisah dan star ground | Dalam desain
+[END TABLE]
+
+[Heading 1] 3. LAPORAN KEMAJUAN
+[Normal] AMR Arya telah berhasil diintegrasikan dengan arsitektur ROS 2 Humble. Modul low-level beroperasi stabil, sementara SLAM Toolbox dan Nav2 telah berfungsi mengarahkan robot pada lingkungan uji. Antarmuka web (arya_web_interface) juga telah fungsional sebagai pusat komando.
+[Heading 1] 4. KESIMPULAN
+[Normal] Peralihan menuju AMR Arya dengan kapabilitas komputasi Mini PC i7-4600U dan arsitektur ROS 2 memberikan keandalan navigasi yang dinamis. Desain ini menghapus keterbatasan infrastruktur fisik yang selama ini membebani operasional AGV lama di PT. XYZ.

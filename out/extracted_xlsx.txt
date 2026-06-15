@@ -1,0 +1,93 @@
+=== EXCEL DATA EXTRACTION ===
+
+
+=== CONTENT OF QFD_AMR_PTxyz.xlsx ===
+
+Sheet: QFD (44x13)
+  Row 1:  | Quality Function Deployment |  |  |  |  |  |  |  |  |  |  | 
+  Row 3:  | Project title: | Prototipe Autonomous Mobile Robot (AMR) untuk Navigasi Indoor Berbasis Pemetaan dan Perencanaan Jalur Otonom  |  |  |  |  |  |  | Correlation: |  |  | 
+  Row 4:  | Project leader: | Moch. Shultan Ali S. |  |  |  |  |  |  | + | . | - | 
+  Row 5:  | Date: | 05/06/2026 |  |  |  |  |  |  | Positive | No correlation | Negative | 
+  Row 7:  |  |  |  |  |  |  |  |  | Relationships: |  |  | 
+  Row 8:  |  |  |  |  |  |  |  |  | 9 | 3 | 1 | 
+  Row 9:  |  | Desired direction of improvement (↑,0,↓) | ↑ | ↑ | ↑ | ↑ | ↑ |  | Strong | Moderate | Weak | None
+  Row 10:  | 1: low, 5: high | Functional Requirements (How's)
+→ | Sistem Navigasi Berbasis LiDAR
+(SLAM + AMCL) | Dynamic Obstacle Avoidance
+(Nav2 + MPPI Controller) | Fusi Sensor IMU + Odometri
+(EKF) | Komputasi Onboard
+(Mini PC i7-4600U) | Web Interface
+Telemetri & Kontrol |  | Competitive evaluation (1: low, 5: high) |  |  | 
+  Row 11:  | Customer importance rating | Customer Requirements - (What's)
+↓ |  |  |  |  |  | Weighted Score | Satisfaction rating | AGV Lama (Competitor) | AMR Komersial Sejenis | Competitor rating 3
+  Row 12: 1 | 5 | Navigasi mandiri tanpa jalur fisik | 9 | 3 | 3 | 9 | 1 | 125 | 4 | 1 | 4 | 
+  Row 13: 2 | 5 | Penghindaran rintangan dinamis real-time | 3 | 9 | 3 | 9 | 1 | 125 | 4 | 1 | 4 | 
+  Row 14: 3 | 5 | Akurasi lokalisasi di rute mixed indoor-outdoor | 9 | 3 | 9 | 9 | 1 | 155 | 4 | 1 | 3 | 
+  Row 15: 4 | 4 | Kecepatan operasional memadai (0,7 m/s) | 3 | 9 | 3 | 9 | 1 | 100 | 4 | 2 | 4 | 
+  Row 16: 5 | 4 | Keandalan sepanjang rute ±88 meter | 9 | 9 | 9 | 9 | 3 | 156 | 4 | 2 | 3 | 
+  Row 17: 6 | 4 | Kemudahan rekonfigurasi rute | 9 | 3 | 1 | 3 | 9 | 100 | 5 | 1 | 3 | 
+  Row 18: 7 | 3 | Monitoring status robot jarak jauh | 1 | 1 | 1 | 3 | 9 | 45 | 4 | 1 | 3 | 
+  Row 19: 8 | 4 | Kemudahan perawatan sistem | 1 | 1 | 1 | 3 | 3 | 36 | 3 | 2 | 3 | 
+  Row 20: 9 | 5 | Keamanan operasional di area personel | 3 | 9 | 3 | 3 | 3 | 105 | 4 | 2 | 3 | 
+  Row 21:  |  | Technical importance score | 211 | 211 | 149 | 255 | 121 | 947 |  |  |  | 
+  Row 22:  |  | Importance % | 0.22280887011615627 | 0.22280887011615627 | 0.1573389651531151 | 0.2692713833157339 | 0.12777191129883844 | 1 |  |  |  | 
+  Row 23:  |  | Priorities rank | 2 | 2 | 4 | 1 | 5 |  |  |  |  | 
+  Row 24:  |  | Current performance | 3 | 3 | 3 | 4 | 3 |  |  |  |  | 
+  Row 25:  |  | Target | 5 | 5 | 5 | 4 | 5 |  |  |  |  | 
+  Row 26:  |  | Benchmark | 5 | 5 | 5 | 4 | 4 |  |  |  |  | 
+  Row 27:  |  | Difficulty | 3 | 3 | 4 | 2 | 3 | 1: very easy, 5: very difficult |  |  |  | 
+  Row 28:  |  | Cost and time | 3 | 3 | 3 | 4 | 3 | 1: low, 5: high |  |  |  | 
+  Row 29:  |  | Priority to improve | 1 | 2 | 3 | 4 | 5 |  |  |  |  | 
+  Row 31:  | Comments/Conclusion: |  |  |  |  |  |  |  |  |  |  | 
+  Row 32:  |  | Berdasarkan analisis QFD, Functional Requirement dengan prioritas tertinggi adalah Komputasi Onboard (Mini PC i7-4600U) dan Sistem Navigasi Berbasis LiDAR (SLAM+AMCL), diikuti Dynamic Obstacle Avoidance (Nav2+MPPI) dan Fusi Sensor EKF. Dibandingkan AGV lama berbasis magnetic line, AMR menunjukkan peningkatan signifikan pada seluruh aspek Customer Requirements, terutama navigasi mandiri, penghindaran rintangan, dan fleksibilitas rekonfigurasi rute. |  |  |  |  |  |  |  |  |  | 
+  Row 36:  | Continuous Improvement Toolkit . www.citoolkit.com |  |  |  |  |  |  |  |  |  |  | 
+  Row 38:  | Guide: |  |  |  |  |  |  |  |  |  |  | 
+  Row 39:  |    Fill in the What's the customer requirements and the importance rating per requirement. |  |  |  |  |  |  |  |  |  |  | 
+  Row 40:  |    Fill in the How's the processes or characteristics that are needed to meet the customer requirements. |  |  |  |  |  |  |  |  |  |  | 
+  Row 41:  |    Work through the matrix indicating the impact that the How's has on each customer requirement. |  |  |  |  |  |  |  |  |  |  | 
+  Row 42:  |    Look at the bottom and the right of the table to see which customer and functional requirements should be given more attention. |  |  |  |  |  |  |  |  |  |  | 
+  Row 43:  | Note: |  |  |  |  |  |  |  |  |  |  | 
+  Row 44:  |    You need to fill only the white and blue cells. |  |  |  |  |  |  |  |  |  |  | 
+
+
+=== CONTENT OF quality_function_deployment.xlsx ===
+
+Sheet: QFD (44x13)
+  Row 1:  | Quality Function Deployment |  |  |  |  |  |  |  |  |  |  | 
+  Row 3:  | Project title: |  |  |  |  |  |  |  | Correlation: |  |  | 
+  Row 4:  | Project leader: |  |  |  |  |  |  |  | + | . | - | 
+  Row 5:  | Date: |  |  |  |  |  |  |  | Positive | No correlation | Negative | 
+  Row 7:  |  |  |  |  |  |  |  |  | Relationships: |  |  | 
+  Row 8:  |  |  |  |  |  |  |  |  | 9 | 3 | 1 | 
+  Row 9:  |  | Desired direction of improvement (↑,0,↓) |  |  |  |  |  |  | Strong | Moderate | Weak | None
+  Row 10:  | 1: low, 5: high | Functional Requirements (How's)
+→ |  |  |  |  |  |  | Competitive evaluation (1: low, 5: high) |  |  | 
+  Row 11:  | Customer importance rating | Customer Requirements - (What's)
+↓ |  |  |  |  |  | Weighted Score | Satisfaction rating | Competitor rating 1 | Competitor rating 2 | Competitor rating 3
+  Row 12: 1 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 13: 2 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 14: 3 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 15: 4 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 16: 5 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 17: 6 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 18: 7 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 19: 8 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 20: 9 |  |  |  |  |  |  |  | 0 |  |  |  | 
+  Row 21:  |  | Technical importance score | 0 | 0 | 0 | 0 | 0 | 0 |  |  |  | 
+  Row 22:  |  | Importance % |   |   |   |   |   | 0 |  |  |  | 
+  Row 23:  |  | Priorities rank | 1 | 1 | 1 | 1 | 1 |  |  |  |  | 
+  Row 24:  |  | Current performance |  |  |  |  |  |  |  |  |  | 
+  Row 25:  |  | Target |  |  |  |  |  |  |  |  |  | 
+  Row 26:  |  | Benchmark |  |  |  |  |  |  |  |  |  | 
+  Row 27:  |  | Difficulty |  |  |  |  |  | 1: very easy, 5: very difficult |  |  |  | 
+  Row 28:  |  | Cost and time |  |  |  |  |  | 1: low, 5: high |  |  |  | 
+  Row 29:  |  | Priority to improve |  |  |  |  |  |  |  |  |  | 
+  Row 31:  | Comments/Conclusion: |  |  |  |  |  |  |  |  |  |  | 
+  Row 36:  | Continuous Improvement Toolkit . www.citoolkit.com |  |  |  |  |  |  |  |  |  |  | 
+  Row 38:  | Guide: |  |  |  |  |  |  |  |  |  |  | 
+  Row 39:  |    Fill in the What's the customer requirements and the importance rating per requirement. |  |  |  |  |  |  |  |  |  |  | 
+  Row 40:  |    Fill in the How's the processes or characteristics that are needed to meet the customer requirements. |  |  |  |  |  |  |  |  |  |  | 
+  Row 41:  |    Work through the matrix indicating the impact that the How's has on each customer requirement. |  |  |  |  |  |  |  |  |  |  | 
+  Row 42:  |    Look at the bottom and the right of the table to see which customer and functional requirements should be given more attention. |  |  |  |  |  |  |  |  |  |  | 
+  Row 43:  | Note: |  |  |  |  |  |  |  |  |  |  | 
+  Row 44:  |    You need to fill only the white and blue cells. |  |  |  |  |  |  |  |  |  |  | 
